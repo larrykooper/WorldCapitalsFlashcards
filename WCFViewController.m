@@ -14,12 +14,16 @@
 
 @implementation WCFViewController
 
+#pragma mark - Initialization Code
+
  - (void)loadView
 {
     NSLog(@"loadView was called.");
     [self setView:[[WCFView alloc] initWithFrame:[[UIScreen mainScreen] bounds]]];
     [[self myView] setMyController:self];
 }
+
+#pragma mark - Animation code 
 
 - (CAAnimation *)flipAnimationWithDuration:(NSTimeInterval)aDuration
                                 startValue:(CGFloat)startValue
@@ -138,6 +142,10 @@
     [firstAnimation setDelegate:self];
     [first setPosition:endPoint];
     [second setPosition:endPoint];
+    //[first lkhere]
+    // I was going to set the textlayer to nil to destroy it
+    // But on second thought, I would like to recycle it
+    // See Evernote 
     [CATransaction begin];
     [first addAnimation:firstAnimation forKey:@"swipe"];
     [second addAnimation:secondAnimation forKey:@"swipe"];
@@ -160,6 +168,7 @@
     return (WCFView *)[self view];
 }
 
+// Called when user rotates the device
 - (BOOL)shouldAutorotate
 {
     //NSLog(@"shouldAutorotate was called.");

@@ -19,6 +19,8 @@ CGFloat const cardWidth = 250.0;
 @synthesize isFlipped;
 @synthesize myController;
 
+#pragma mark - Initialization Code
+
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
@@ -93,6 +95,8 @@ CGFloat const cardWidth = 250.0;
     return self;
 }
 
+#pragma mark - Gesture Event Handlers
+
 - (void)tap:(UIGestureRecognizer *)gr
 {
     CGPoint myPoint = [gr locationInView:self];
@@ -117,6 +121,9 @@ CGFloat const cardWidth = 250.0;
     NSLog(@"swipeLeft was called.");    
 }
 
+#pragma mark - Other
+
+// Called when user rotates the device 
 - (void)rotateMe
 {
     //NSLog(@"rotateMe was called.");
