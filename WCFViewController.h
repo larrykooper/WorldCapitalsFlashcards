@@ -15,5 +15,6 @@
 }
 
 - (void)flip;
+- (void)removeCard;
 
 @end

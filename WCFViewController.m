@@ -43,13 +43,28 @@
     return flipAnimation;
 }
 
+- (CAAnimation *)swipeAnimationWithDuration:(NSTimeInterval)aDuration
+                                 startPoint:(CGPoint)startPoint
+                                   endPoint:(CGPoint)endPoint
+{
+    isTransitioning = YES;
+    CABasicAnimation *swipeAnimation = [CABasicAnimation animationWithKeyPath:@"position"];   
+    
+    [swipeAnimation setFromValue:[NSValue valueWithCGPoint:startPoint]];
+    [swipeAnimation setToValue:[NSValue valueWithCGPoint:endPoint]];
+    [swipeAnimation setDuration:aDuration];
+    return swipeAnimation;    
+}
+
+
 // Flip code should be here, in the controller 
 - (void)flip
 {
     // If we are currently transitioning, ignore any further taps on the
     // card until we are done
-	if (isTransitioning)
+	if (isTransitioning) {
 		return;
+    }
     
     CALayer *front;
     CALayer *back;    
@@ -90,6 +105,7 @@
     front.transform = perspective;
     back.transform = perspective;
     
+    // We set the delegate to find out when the animation has stopped 
     frontAnimation.delegate = self;
     [CATransaction begin];
     [front addAnimation:frontAnimation forKey:@"flip"];
@@ -98,12 +114,47 @@
 	
 }
 
+- (void)removeCard
+{
+    if (isTransitioning) {
+        return;
+    }
+    CALayer *first = [[self myView] firstLayer];
+    CALayer *second = [[self myView] secondLayer];
+    
+    CGFloat endPointY = 0.0 - (cardHeight / 2.0);
+    
+    CGPoint startPoint = CGPointMake([first position].x, [first position].y);
+    CGPoint endPoint = CGPointMake([first position].x, endPointY);
+    
+    CAAnimation *firstAnimation = [self swipeAnimationWithDuration:0.3f
+                                                        startPoint:startPoint
+                                                          endPoint:endPoint];
+    
+    CAAnimation *secondAnimation = [self swipeAnimationWithDuration:0.3f
+                                                         startPoint:startPoint
+                                                           endPoint:endPoint];
+    
+    [firstAnimation setDelegate:self];
+    [first setPosition:endPoint];
+    [second setPosition:endPoint];
+    [CATransaction begin];
+    [first addAnimation:firstAnimation forKey:@"swipe"];
+    [second addAnimation:secondAnimation forKey:@"swipe"];
+    [CATransaction commit];
+    
+}
+
+
 - (void)animationDidStop:(CAAnimation *)animation finished:(BOOL)flag
 {
+    // This currently works for both animations, the flip and the swipe.
+    NSLog(@"animationDidStop has been called.");
     [[self myView] setIsFlipped:![[self myView] isFlipped]];	
 	isTransitioning = NO;
 }
-                
+
+             
 - (WCFView *)myView
 {
     return (WCFView *)[self view];
@@ -132,16 +183,6 @@
     instrsLabel.backgroundColor = [UIColor clearColor];
     instrsLabel.font = [UIFont systemFontOfSize:12.0];
     instrsLabel.numberOfLines = 0;
-     
-    // Set button
-//    UIButton *tryAgainBut = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-//    [tryAgainBut addTarget:self
-//                  action:@selector(tryAgainLater)
-//        forControlEvents:UIControlEventTouchUpInside];
-//    [tryAgainBut setTitle:@"Try Again Later" forState:UIControlStateNormal];
-//    tryAgainBut.frame = CGRectMake(140.0, 330.0, 150.0, 44.0);
-//    [tryAgainBut setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-//    [[self view] addSubview:tryAgainBut];    
 
 }
 
@@ -158,6 +199,5 @@
     CATextLayer *countryTextLayer = [[self myView] makeLabel:@"Egypt"];
     [[[self myView] firstLayer] addSublayer:countryTextLayer];
 }
-
 
 @end

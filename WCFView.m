@@ -10,8 +10,8 @@
 #import "WCFView.h"
 #import "WCFViewController.h"
 
-#define cardHeight 150.0
-#define cardWidth 250.0
+CGFloat const cardHeight = 150.0;
+CGFloat const cardWidth = 250.0;
 
 @implementation WCFView
 
@@ -96,7 +96,7 @@
 - (void)tap:(UIGestureRecognizer *)gr
 {
     CGPoint myPoint = [gr locationInView:self];
-    CGFloat cardTopY = ((self.bounds.size.height / 2.0) - cardHeight / 2.0);  // Must change this and the line 2 after for rotate
+    CGFloat cardTopY = ((self.bounds.size.height / 2.0) - cardHeight / 2.0);  
     CGFloat cardBottomY = cardTopY + cardHeight;
     CGFloat cardLeftX = ((self.bounds.size.width / 2.0) - cardWidth / 2.0);
     CGFloat cardRightX = (cardLeftX + cardWidth);
@@ -109,11 +109,12 @@
 - (void)swipeUp:(UIGestureRecognizer *)gr
 {
     NSLog(@"swipeUp was called.");
+    [myController removeCard];
 }
 
 - (void)swipeLeft:(UIGestureRecognizer *)gr
 {
-    NSLog(@"swipeLeft was called.");
+    NSLog(@"swipeLeft was called.");    
 }
 
 - (void)rotateMe

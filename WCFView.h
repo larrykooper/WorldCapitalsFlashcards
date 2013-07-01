@@ -22,4 +22,7 @@
 - (void)rotateMe;
 - (CATextLayer *)makeLabel:(NSString *)text;
 
+extern CGFloat const cardHeight;
+extern CGFloat const cardWidth;
+
 @end
