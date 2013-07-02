@@ -56,10 +56,9 @@
     
     [swipeAnimation setFromValue:[NSValue valueWithCGPoint:startPoint]];
     [swipeAnimation setToValue:[NSValue valueWithCGPoint:endPoint]];
-    [swipeAnimation setDuration:aDuration];
+    //[swipeAnimation setDuration:aDuration];
     return swipeAnimation;    
 }
-
 
 // Flip code should be here, in the controller 
 - (void)flip
@@ -75,15 +74,15 @@
     CGFloat startValueFront, endValueFront, startValueBack, endValueBack;
     
     if (![[self myView] isFlipped]) {
-        front = [[self myView] firstLayer];
-        back = [[self myView] secondLayer];
+        front = [[self myView] countryLayer];
+        back = [[self myView] capitalLayer];
         startValueFront = 0.0f;
         endValueFront = -M_PI;
         startValueBack = M_PI;
         endValueBack = 0.0f;
     } else {
-        front = [[self myView] secondLayer];
-        back = [[self myView] firstLayer];
+        front = [[self myView] capitalLayer];
+        back = [[self myView] countryLayer];
         startValueFront = 0.0f;
         endValueFront = M_PI;
         startValueBack = -M_PI;
@@ -123,45 +122,58 @@
     if (isTransitioning) {
         return;
     }
-    CALayer *first = [[self myView] firstLayer];
-    CALayer *second = [[self myView] secondLayer];
+    CAAnimationGroup *removeCard = [CAAnimationGroup animation]; // create instance
+    [removeCard setDuration:1.0];
+    CALayer *first = [[self myView] countryLayer];
+    CALayer *second = [[self myView] capitalLayer];
     
     CGFloat endPointY = 0.0 - (cardHeight / 2.0);
     
     CGPoint startPoint = CGPointMake([first position].x, [first position].y);
     CGPoint endPoint = CGPointMake([first position].x, endPointY);
     
-    CAAnimation *firstAnimation = [self swipeAnimationWithDuration:0.3f
+    CAAnimation *firstAnimation = [self swipeAnimationWithDuration:1.0
                                                         startPoint:startPoint
                                                           endPoint:endPoint];
     
-    CAAnimation *secondAnimation = [self swipeAnimationWithDuration:0.3f
+    CAAnimation *secondAnimation = [self swipeAnimationWithDuration:0.5f
                                                          startPoint:startPoint
                                                            endPoint:endPoint];
     
-    [firstAnimation setDelegate:self];
+    [removeCard setAnimations:[NSArray arrayWithObjects:firstAnimation, secondAnimation, nil]];
+    
+    [removeCard setDelegate:self];
     [first setPosition:endPoint];
     [second setPosition:endPoint];
+    [first addAnimation:removeCard forKey:@"removeCard"];
     //[first lkhere]
     // I was going to set the textlayer to nil to destroy it
     // But on second thought, I would like to recycle it
     // See Evernote 
-    [CATransaction begin];
-    [first addAnimation:firstAnimation forKey:@"swipe"];
-    [second addAnimation:secondAnimation forKey:@"swipe"];
-    [CATransaction commit];
+//    [CATransaction begin];
+//    [first addAnimation:firstAnimation forKey:@"swipe"];
+//    [second addAnimation:secondAnimation forKey:@"swipe"];
+//    [CATransaction commit];
+   
     
 }
-
 
 - (void)animationDidStop:(CAAnimation *)animation finished:(BOOL)flag
 {
     // This currently works for both animations, the flip and the swipe.
     NSLog(@"animationDidStop has been called.");
-    [[self myView] setIsFlipped:![[self myView] isFlipped]];	
+    NSLog(@"%@ finished: %d", animation, flag);
+    NSLog(@"value for key: %@", [animation valueForKey:@"id"]);
+    if ([[animation valueForKey:@"id"] isEqual:@"flip"]) {
+        [[self myView] setIsFlipped:![[self myView] isFlipped]];
+    
+    }
+    if ([[animation valueForKey:@"id"] isEqual:@"swipe"]) {
+        [self showNextCard];
+    }
+    	
 	isTransitioning = NO;
 }
-
              
 - (WCFView *)myView
 {
@@ -204,9 +216,41 @@
 {
     NSLog(@"showNextCard executing.");
     // This needs to get a random country from the countries that
-    //  user has NOT removed from pack yet.  
-    CATextLayer *countryTextLayer = [[self myView] makeLabel:@"Egypt"];
-    [[[self myView] firstLayer] addSublayer:countryTextLayer];
+    //  user has NOT removed from pack yet.
+    WCFView *theView = [self myView];
+    CALayer *country = [theView countryLayer];
+    CALayer *capital = [theView capitalLayer];
+    CGRect bounds = [theView bounds];
+    CGPoint endPoint = [theView center];
+    
+    CGFloat startPointX =  bounds.size.width + (cardWidth / 2.0);
+    
+    CGPoint startPoint = CGPointMake(startPointX, endPoint.y);
+    
+    
+    
+    
+    CAAnimation *countryAnimation = [self swipeAnimationWithDuration:0.3f
+                                                        startPoint:startPoint
+                                                          endPoint:endPoint];
+    
+    CAAnimation *capitalAnimation = [self swipeAnimationWithDuration:0.3f
+                                                         startPoint:startPoint
+                                                           endPoint:endPoint];
+    
+    [countryAnimation setDelegate:self];
+    [country setPosition:endPoint];
+    [capital setPosition:endPoint];
+    [CATransaction begin];
+    [country addAnimation:countryAnimation forKey:@"newcard"];
+    [capital addAnimation:capitalAnimation forKey:@"newcard"];
+    [CATransaction commit];
+    
+    
+    
+   
+    //CATextLayer *countryTextLayer = [[self myView] makeLabel:@"Egypt"];
+    //[[[self myView] countryLayer] addSublayer:countryTextLayer];
 }
 
 @end

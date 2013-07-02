@@ -15,7 +15,7 @@ CGFloat const cardWidth = 250.0;
 
 @implementation WCFView
 
-@synthesize firstLayer, secondLayer;
+@synthesize countryLayer, capitalLayer;
 @synthesize isFlipped;
 @synthesize myController;
 
@@ -32,43 +32,44 @@ CGFloat const cardWidth = 250.0;
         
         // Create a CALayer object
         // FIRST LAYER
-        firstLayer= [CALayer layer];
-        firstLayer.doubleSided = NO;
-        firstLayer.name = @"1";
+        
+        countryLayer = [CALayer layer];
+        countryLayer.doubleSided = NO;
+        countryLayer.name = @"1";
         
         // Give it a size
-        [firstLayer setBounds:CGRectMake(0.0, 0.0, cardWidth, cardHeight)];
+        [countryLayer setBounds:CGRectMake(0.0, 0.0, cardWidth, cardHeight)];
         
         // Give it a location        
-        [firstLayer setPosition:[self center]];
+        [countryLayer setPosition:[self center]];
         
         // Give it a background color
-        firstLayer.backgroundColor = [[UIColor whiteColor] CGColor];        
+        countryLayer.backgroundColor = [[UIColor whiteColor] CGColor];        
         
-        [firstLayer setMasksToBounds:YES];
+        [countryLayer setMasksToBounds:YES];
         CATextLayer *textLayer = [self makeLabel:@"Egypt"];
-        [firstLayer addSublayer:textLayer];
+        [countryLayer addSublayer:textLayer];
         
         // Second layer (the one that starts out on the bottom)
         
-        secondLayer = [CALayer layer];
-        secondLayer.doubleSided = NO;
-        secondLayer.name = @"2";
+        capitalLayer = [CALayer layer];
+        capitalLayer.doubleSided = NO;
+        capitalLayer.name = @"2";
         
         // Give it a size
-        [secondLayer setBounds:CGRectMake(0.0, 0.0, cardWidth, cardHeight)];
+        [capitalLayer setBounds:CGRectMake(0.0, 0.0, cardWidth, cardHeight)];
        
-        [secondLayer setPosition:[self center]];
-        secondLayer.backgroundColor = [[UIColor whiteColor] CGColor];
-        [secondLayer setMasksToBounds:YES];
+        [capitalLayer setPosition:[self center]];
+        capitalLayer.backgroundColor = [[UIColor whiteColor] CGColor];
+        [capitalLayer setMasksToBounds:YES];
         
         CATextLayer *backLayer = [self makeLabel:@"Cairo"];
-        [secondLayer addSublayer:backLayer];
+        [capitalLayer addSublayer:backLayer];
         
         // Make my two new layers sublayers of the view's layer
         // add bottom first
-        [[self layer] addSublayer:secondLayer];
-        [[self layer] addSublayer:firstLayer];
+        [[self layer] addSublayer:capitalLayer];
+        [[self layer] addSublayer:countryLayer];
         
         // Add the tap gesture recognizer
         
@@ -127,8 +128,8 @@ CGFloat const cardWidth = 250.0;
 - (void)rotateMe
 {
     //NSLog(@"rotateMe was called.");
-    [firstLayer setPosition:CGPointMake(self.bounds.size.width / 2, self.bounds.size.height / 2)];
-    [secondLayer setPosition:CGPointMake(self.bounds.size.width / 2, self.bounds.size.height / 2)];
+    [countryLayer setPosition:CGPointMake(self.bounds.size.width / 2, self.bounds.size.height / 2)];
+    [capitalLayer setPosition:CGPointMake(self.bounds.size.width / 2, self.bounds.size.height / 2)];
 }
 
 - (CATextLayer *)makeLabel:(NSString *)text
