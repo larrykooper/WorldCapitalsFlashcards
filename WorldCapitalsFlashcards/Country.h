@@ -5,6 +5,7 @@
 //  Created by Kooper, Laurence on 6/28/13.
 //  Copyright (c) 2013 Kooper, Laurence. All rights reserved.
 //
+// A Country models a world nation.
 
 #import <Foundation/Foundation.h>
 

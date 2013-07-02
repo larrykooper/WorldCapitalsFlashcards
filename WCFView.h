@@ -5,6 +5,7 @@
 //  Created by Kooper, Laurence on 6/28/13.
 //  Copyright (c) 2013 Kooper, Laurence. All rights reserved.
 //
+// View class for the WCF's main view.
 
 #import <Foundation/Foundation.h>
 #import <QuartzCore/QuartzCore.h>
@@ -16,7 +17,7 @@
 }
 
 @property (nonatomic, weak) WCFViewController *myController;
-@property (nonatomic, strong) CALayer *firstLayer, *secondLayer;
+@property (nonatomic, strong) CALayer *countryLayer, *capitalLayer;
 @property BOOL isFlipped;
 
 - (void)rotateMe;
