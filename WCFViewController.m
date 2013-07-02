@@ -5,8 +5,9 @@
 //  Created by Kooper, Laurence on 6/27/13.
 //  Copyright (c) 2013 Kooper, Laurence. All rights reserved.
 //
-// Code from Gary Myers
+// Some code inspired by Gary Myers
 // http://www.mycodestudio.com/blog/2011/01/10/coreanimation/
+//
 
 #import "WCFViewController.h"
 #import <QuartzCore/QuartzCore.h>
@@ -56,7 +57,7 @@
     
     [swipeAnimation setFromValue:[NSValue valueWithCGPoint:startPoint]];
     [swipeAnimation setToValue:[NSValue valueWithCGPoint:endPoint]];
-    //[swipeAnimation setDuration:aDuration];
+    [swipeAnimation setDuration:aDuration];
     return swipeAnimation;    
 }
 
@@ -94,9 +95,8 @@
                                                 startValue:startValueFront
                                                   endValue:endValueFront];
     
-    
     CAAnimation *backAnimation = [self
-                                    flipAnimationWithDuration:0.75f
+                                flipAnimationWithDuration:0.75f
                                                    startValue:startValueBack
                                                      endValue:endValueBack];
     
@@ -111,8 +111,8 @@
     // We set the delegate to find out when the animation has stopped 
     frontAnimation.delegate = self;
     [CATransaction begin];
-    [front addAnimation:frontAnimation forKey:@"flip"];
-    [back addAnimation:backAnimation forKey:@"flip"];
+    [front addAnimation:frontAnimation forKey:@"flip1"];
+    [back addAnimation:backAnimation forKey:@"flip2"];
     [CATransaction commit];
 	
 }
@@ -122,8 +122,7 @@
     if (isTransitioning) {
         return;
     }
-    CAAnimationGroup *removeCard = [CAAnimationGroup animation]; // create instance
-    [removeCard setDuration:1.0];
+    
     CALayer *first = [[self myView] countryLayer];
     CALayer *second = [[self myView] capitalLayer];
     
@@ -132,46 +131,47 @@
     CGPoint startPoint = CGPointMake([first position].x, [first position].y);
     CGPoint endPoint = CGPointMake([first position].x, endPointY);
     
-    CAAnimation *firstAnimation = [self swipeAnimationWithDuration:1.0
+    CAAnimation *firstAnimation = [self swipeAnimationWithDuration:0.3f
                                                         startPoint:startPoint
                                                           endPoint:endPoint];
     
-    CAAnimation *secondAnimation = [self swipeAnimationWithDuration:0.5f
+    CAAnimation *secondAnimation = [self swipeAnimationWithDuration:0.3f
                                                          startPoint:startPoint
                                                            endPoint:endPoint];
     
-    [removeCard setAnimations:[NSArray arrayWithObjects:firstAnimation, secondAnimation, nil]];
-    
-    [removeCard setDelegate:self];
+    [firstAnimation setDelegate:self];
     [first setPosition:endPoint];
     [second setPosition:endPoint];
-    [first addAnimation:removeCard forKey:@"removeCard"];
+    [firstAnimation setValue:@"swipeAnim" forKeyPath:@"animationType"];
+    //[firstAnimation setRemovedOnCompletion:NO];  // This stmt only needed if you want to use animationForKey
+   
     //[first lkhere]
     // I was going to set the textlayer to nil to destroy it
     // But on second thought, I would like to recycle it
     // See Evernote 
-//    [CATransaction begin];
-//    [first addAnimation:firstAnimation forKey:@"swipe"];
-//    [second addAnimation:secondAnimation forKey:@"swipe"];
-//    [CATransaction commit];
-   
-    
+    [CATransaction begin];
+    [first addAnimation:firstAnimation forKey:@"swipe1"];
+    [second addAnimation:secondAnimation forKey:@"swipe2"];
+    [CATransaction commit];
+
 }
 
 - (void)animationDidStop:(CAAnimation *)animation finished:(BOOL)flag
 {
-    // This currently works for both animations, the flip and the swipe.
+    // Handles the ending logic for all the animations
     NSLog(@"animationDidStop has been called.");
     NSLog(@"%@ finished: %d", animation, flag);
-    NSLog(@"value for key: %@", [animation valueForKey:@"id"]);
+    
+    if ([[animation valueForKey:@"animationType"] isEqual:@"swipeAnim"]) {
+        NSLog(@"Swipe has ended.");
+        [self showNextCard];
+    }
+    
     if ([[animation valueForKey:@"id"] isEqual:@"flip"]) {
         [[self myView] setIsFlipped:![[self myView] isFlipped]];
     
     }
-    if ([[animation valueForKey:@"id"] isEqual:@"swipe"]) {
-        [self showNextCard];
-    }
-    	
+       	
 	isTransitioning = NO;
 }
              
@@ -194,7 +194,7 @@
     
     // Set swipe instrs
     
-    UILabel *instrsLabel = [[UILabel alloc] initWithFrame:CGRectMake(60, 320, 300, 30)];
+    UILabel *instrsLabel = [[UILabel alloc] initWithFrame:CGRectMake(60, 340, 300, 30)];
     [self.view addSubview:instrsLabel];
     
     instrsLabel.text = @"Swipe up: remove card\nSwipe left: try card again later";
@@ -204,7 +204,6 @@
     instrsLabel.backgroundColor = [UIColor clearColor];
     instrsLabel.font = [UIFont systemFontOfSize:12.0];
     instrsLabel.numberOfLines = 0;
-
 }
 
 - (void)tryAgainLater
@@ -227,9 +226,6 @@
     
     CGPoint startPoint = CGPointMake(startPointX, endPoint.y);
     
-    
-    
-    
     CAAnimation *countryAnimation = [self swipeAnimationWithDuration:0.3f
                                                         startPoint:startPoint
                                                           endPoint:endPoint];
@@ -242,12 +238,9 @@
     [country setPosition:endPoint];
     [capital setPosition:endPoint];
     [CATransaction begin];
-    [country addAnimation:countryAnimation forKey:@"newcard"];
-    [capital addAnimation:capitalAnimation forKey:@"newcard"];
-    [CATransaction commit];
-    
-    
-    
+    [country addAnimation:countryAnimation forKey:@"newcard1"];
+    [capital addAnimation:capitalAnimation forKey:@"newcard2"];
+    [CATransaction commit];    
    
     //CATextLayer *countryTextLayer = [[self myView] makeLabel:@"Egypt"];
     //[[[self myView] countryLayer] addSublayer:countryTextLayer];
