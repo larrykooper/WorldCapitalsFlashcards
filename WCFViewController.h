@@ -8,7 +8,6 @@
 // Controller for the WCF's main view.
 
 #import <Foundation/Foundation.h>
-//#import <QuartzCore/QuartzCore.h>
 
 @interface WCFViewController : UIViewController
 {
@@ -17,5 +16,6 @@
 
 - (void)flip;
 - (void)removeCard;
+- (void)tryCardAgainLater;
 
 @end

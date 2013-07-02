@@ -8,7 +8,6 @@
 // View class for the WCF's main view.
 
 #import <Foundation/Foundation.h>
-#import <QuartzCore/QuartzCore.h>
 @class WCFViewController;
 
 @interface WCFView : UIView
@@ -17,7 +16,7 @@
 }
 
 @property (nonatomic, weak) WCFViewController *myController;
-@property (nonatomic, strong) CALayer *countryLayer, *capitalLayer;
+@property (nonatomic, strong) CALayer *firstLayer, *secondLayer;
 @property BOOL isFlipped;
 
 - (void)rotateMe;

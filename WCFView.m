@@ -6,6 +6,7 @@
 //  Copyright (c) 2013 Kooper, Laurence. All rights reserved.
 //
 
+
 #import <QuartzCore/QuartzCore.h>
 #import "WCFView.h"
 #import "WCFViewController.h"
@@ -15,14 +16,13 @@ CGFloat const cardWidth = 250.0;
 
 @implementation WCFView
 
-@synthesize countryLayer, capitalLayer;
+@synthesize firstLayer, secondLayer;
 @synthesize isFlipped;
 @synthesize myController;
 
-#pragma mark - Initialization Code
-
 - (id)initWithFrame:(CGRect)frame
 {
+    NSLog(@"Message 7: WCFView.m: initWithFrame started");
     self = [super initWithFrame:frame];
     
     if (self) {
@@ -33,73 +33,72 @@ CGFloat const cardWidth = 250.0;
         // Create a CALayer object
         // FIRST LAYER
         
-        countryLayer = [CALayer layer];
-        countryLayer.doubleSided = NO;
-        countryLayer.name = @"1";
+        firstLayer= [CALayer layer];
+        firstLayer.doubleSided = NO;
+        firstLayer.name = @"1";
         
         // Give it a size
-        [countryLayer setBounds:CGRectMake(0.0, 0.0, cardWidth, cardHeight)];
+        [firstLayer setBounds:CGRectMake(0.0, 0.0, cardWidth, cardHeight)];
         
         // Give it a location        
-        [countryLayer setPosition:[self center]];
+        [firstLayer setPosition:[self center]];
         
         // Give it a background color
-        countryLayer.backgroundColor = [[UIColor whiteColor] CGColor];        
+        firstLayer.backgroundColor = [[UIColor whiteColor] CGColor];
         
-        [countryLayer setMasksToBounds:YES];
+        [firstLayer setMasksToBounds:YES];
         CATextLayer *textLayer = [self makeLabel:@"Egypt"];
-        [countryLayer addSublayer:textLayer];
+        [firstLayer addSublayer:textLayer];
         
         // Second layer (the one that starts out on the bottom)
         
-        capitalLayer = [CALayer layer];
-        capitalLayer.doubleSided = NO;
-        capitalLayer.name = @"2";
+        secondLayer = [CALayer layer];
+        secondLayer.doubleSided = NO;
+        secondLayer.name = @"2";
         
         // Give it a size
-        [capitalLayer setBounds:CGRectMake(0.0, 0.0, cardWidth, cardHeight)];
+        [secondLayer setBounds:CGRectMake(0.0, 0.0, cardWidth, cardHeight)];
        
-        [capitalLayer setPosition:[self center]];
-        capitalLayer.backgroundColor = [[UIColor whiteColor] CGColor];
-        [capitalLayer setMasksToBounds:YES];
+        [secondLayer setPosition:[self center]];
+        secondLayer.backgroundColor = [[UIColor whiteColor] CGColor];
+        [secondLayer setMasksToBounds:YES];
         
         CATextLayer *backLayer = [self makeLabel:@"Cairo"];
-        [capitalLayer addSublayer:backLayer];
+        [secondLayer addSublayer:backLayer];
         
         // Make my two new layers sublayers of the view's layer
         // add bottom first
-        [[self layer] addSublayer:capitalLayer];
-        [[self layer] addSublayer:countryLayer];
-        
-        // Add the tap gesture recognizer
+        [[self layer] addSublayer:secondLayer];
+        [[self layer] addSublayer:firstLayer]; 
         
         UITapGestureRecognizer *tapRecognizer =
              [[UITapGestureRecognizer alloc] initWithTarget:self
                                                      action:@selector(tap:)];
         [self addGestureRecognizer:tapRecognizer];
         
+        // OTHER GESTURE RECOGNIZERS
         UISwipeGestureRecognizer *swipeRecognizer =
               [[UISwipeGestureRecognizer alloc] initWithTarget:self
                                                         action:@selector(swipeUp:)];
-        
+
         [swipeRecognizer setDirection:UISwipeGestureRecognizerDirectionUp];
-        
+
         [self addGestureRecognizer:swipeRecognizer];
-        
+
         UISwipeGestureRecognizer *swipeLeftRecognizer =
              [[UISwipeGestureRecognizer alloc] initWithTarget:self
                                                        action:@selector(swipeLeft:)];
-        
+
         [swipeLeftRecognizer setDirection:UISwipeGestureRecognizerDirectionLeft];
         [self addGestureRecognizer:swipeLeftRecognizer];
+
     }
     return self;
 }
 
-#pragma mark - Gesture Event Handlers
-
 - (void)tap:(UIGestureRecognizer *)gr
 {
+    NSLog(@"Message 1: WCFView.m: I am in tap handler");
     CGPoint myPoint = [gr locationInView:self];
     CGFloat cardTopY = ((self.bounds.size.height / 2.0) - cardHeight / 2.0);  
     CGFloat cardBottomY = cardTopY + cardHeight;
@@ -108,7 +107,8 @@ CGFloat const cardWidth = 250.0;
     
     if (myPoint.y > cardTopY && myPoint.y < cardBottomY && myPoint.x > cardLeftX && myPoint.x < cardRightX) {
         [myController flip];
-    }    
+    }
+
 }
 
 - (void)swipeUp:(UIGestureRecognizer *)gr
@@ -119,18 +119,10 @@ CGFloat const cardWidth = 250.0;
 
 - (void)swipeLeft:(UIGestureRecognizer *)gr
 {
-    NSLog(@"swipeLeft was called.");    
+    NSLog(@"swipeLeft was called.");
+    [myController tryCardAgainLater];
 }
 
-#pragma mark - Other
-
-// Called when user rotates the device 
-- (void)rotateMe
-{
-    //NSLog(@"rotateMe was called.");
-    [countryLayer setPosition:CGPointMake(self.bounds.size.width / 2, self.bounds.size.height / 2)];
-    [capitalLayer setPosition:CGPointMake(self.bounds.size.width / 2, self.bounds.size.height / 2)];
-}
 
 - (CATextLayer *)makeLabel:(NSString *)text
 {
@@ -147,5 +139,13 @@ CGFloat const cardWidth = 250.0;
     
     return label;
 }
+
+- (void)rotateMe
+{
+    NSLog(@"rotateMe was called.");
+    [firstLayer setPosition:CGPointMake(self.bounds.size.width / 2, self.bounds.size.height / 2)];
+    [secondLayer setPosition:CGPointMake(self.bounds.size.width / 2, self.bounds.size.height / 2)];
+}
+
 
 @end

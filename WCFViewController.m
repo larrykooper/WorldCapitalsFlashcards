@@ -5,9 +5,9 @@
 //  Created by Kooper, Laurence on 6/27/13.
 //  Copyright (c) 2013 Kooper, Laurence. All rights reserved.
 //
-// Some code inspired by Gary Myers
+// Code from Gary Myers
 // http://www.mycodestudio.com/blog/2011/01/10/coreanimation/
-//
+// MOTHERSHIP
 
 #import "WCFViewController.h"
 #import <QuartzCore/QuartzCore.h>
@@ -15,16 +15,12 @@
 
 @implementation WCFViewController
 
-#pragma mark - Initialization Code
-
  - (void)loadView
 {
-    NSLog(@"loadView was called.");
+    NSLog(@"Message 5: WCFViewController.m: loadView was called.");
     [self setView:[[WCFView alloc] initWithFrame:[[UIScreen mainScreen] bounds]]];
     [[self myView] setMyController:self];
 }
-
-#pragma mark - Animation code 
 
 - (CAAnimation *)flipAnimationWithDuration:(NSTimeInterval)aDuration
                                 startValue:(CGFloat)startValue
@@ -53,37 +49,38 @@
                                    endPoint:(CGPoint)endPoint
 {
     isTransitioning = YES;
-    CABasicAnimation *swipeAnimation = [CABasicAnimation animationWithKeyPath:@"position"];   
+    CABasicAnimation *swipeAnimation = [CABasicAnimation animationWithKeyPath:@"position"];
     
     [swipeAnimation setFromValue:[NSValue valueWithCGPoint:startPoint]];
     [swipeAnimation setToValue:[NSValue valueWithCGPoint:endPoint]];
     [swipeAnimation setDuration:aDuration];
-    return swipeAnimation;    
+    return swipeAnimation;
 }
+
 
 // Flip code should be here, in the controller 
 - (void)flip
 {
+    NSLog(@"Message 2: I am in flip");
     // If we are currently transitioning, ignore any further taps on the
     // card until we are done
-	if (isTransitioning) {
+	if (isTransitioning)
 		return;
-    }
     
     CALayer *front;
     CALayer *back;    
     CGFloat startValueFront, endValueFront, startValueBack, endValueBack;
     
     if (![[self myView] isFlipped]) {
-        front = [[self myView] countryLayer];
-        back = [[self myView] capitalLayer];
+        front = [[self myView] firstLayer];
+        back = [[self myView] secondLayer];
         startValueFront = 0.0f;
         endValueFront = -M_PI;
         startValueBack = M_PI;
         endValueBack = 0.0f;
     } else {
-        front = [[self myView] capitalLayer];
-        back = [[self myView] countryLayer];
+        front = [[self myView] secondLayer];
+        back = [[self myView] firstLayer];
         startValueFront = 0.0f;
         endValueFront = M_PI;
         startValueBack = -M_PI;
@@ -95,8 +92,9 @@
                                                 startValue:startValueFront
                                                   endValue:endValueFront];
     
+    
     CAAnimation *backAnimation = [self
-                                flipAnimationWithDuration:0.75f
+                                    flipAnimationWithDuration:0.75f
                                                    startValue:startValueBack
                                                      endValue:endValueBack];
     
@@ -108,11 +106,12 @@
     front.transform = perspective;
     back.transform = perspective;
     
-    // We set the delegate to find out when the animation has stopped 
     frontAnimation.delegate = self;
+    NSLog(@"Message 8: WCFViewController.m: About to do setValue");
+    [frontAnimation setValue:@"flipAnim" forKeyPath:@"animationType"];
     [CATransaction begin];
-    [front addAnimation:frontAnimation forKey:@"flip1"];
-    [back addAnimation:backAnimation forKey:@"flip2"];
+    [front addAnimation:frontAnimation forKey:@"flip"];
+    [back addAnimation:backAnimation forKey:@"flip"];
     [CATransaction commit];
 	
 }
@@ -123,8 +122,8 @@
         return;
     }
     
-    CALayer *first = [[self myView] countryLayer];
-    CALayer *second = [[self myView] capitalLayer];
+    CALayer *first = [[self myView] firstLayer];
+    CALayer *second = [[self myView] secondLayer];
     
     CGFloat endPointY = 0.0 - (cardHeight / 2.0);
     
@@ -148,7 +147,7 @@
     //[first lkhere]
     // I was going to set the textlayer to nil to destroy it
     // But on second thought, I would like to recycle it
-    // See Evernote 
+    // See Evernote
     [CATransaction begin];
     [first addAnimation:firstAnimation forKey:@"swipe1"];
     [second addAnimation:secondAnimation forKey:@"swipe2"];
@@ -156,22 +155,21 @@
 
 }
 
+
 - (void)animationDidStop:(CAAnimation *)animation finished:(BOOL)flag
 {
-    // Handles the ending logic for all the animations
-    NSLog(@"animationDidStop has been called.");
-    NSLog(@"%@ finished: %d", animation, flag);
+    NSLog(@"Message 3: WCFViewController.m: I am in animationDidStop");
     
     if ([[animation valueForKey:@"animationType"] isEqual:@"swipeAnim"]) {
         NSLog(@"Swipe has ended.");
         [self showNextCard];
     }
-    
-    if ([[animation valueForKey:@"id"] isEqual:@"flip"]) {
+
+    if ([[animation valueForKey:@"animationType"] isEqual:@"flipAnim"]) {
+        NSLog(@"Message 4: We are in flipStop");
         [[self myView] setIsFlipped:![[self myView] isFlipped]];
-    
     }
-       	
+    
 	isTransitioning = NO;
 }
              
@@ -180,35 +178,33 @@
     return (WCFView *)[self view];
 }
 
-// Called when user rotates the device
 - (BOOL)shouldAutorotate
 {
-    //NSLog(@"shouldAutorotate was called.");
+    NSLog(@"shouldAutorotate was called.");
     [[self myView] rotateMe];
     return YES;
 }
 
 - (void)viewDidLoad
 {
-    NSLog(@"viewDidLoad was called.");    
-    
-    // Set swipe instrs
+    NSLog(@"Message 6: WCFViewController.m: viewDidLoad was called.");
     
     UILabel *instrsLabel = [[UILabel alloc] initWithFrame:CGRectMake(60, 340, 300, 30)];
     [self.view addSubview:instrsLabel];
-    
+
     instrsLabel.text = @"Swipe up: remove card\nSwipe left: try card again later";
     instrsLabel.textColor = [UIColor blackColor];
-    
+
     instrsLabel.textAlignment = NSTextAlignmentLeft;
     instrsLabel.backgroundColor = [UIColor clearColor];
     instrsLabel.font = [UIFont systemFontOfSize:12.0];
     instrsLabel.numberOfLines = 0;
+
 }
 
-- (void)tryAgainLater
+- (void)tryCardAgainLater
 {
-    NSLog(@"tryAgainLater was called.");
+    NSLog(@"tryCardAgainLater was called.");
 }
 
 - (void)showNextCard
@@ -217,8 +213,8 @@
     // This needs to get a random country from the countries that
     //  user has NOT removed from pack yet.
     WCFView *theView = [self myView];
-    CALayer *country = [theView countryLayer];
-    CALayer *capital = [theView capitalLayer];
+    CALayer *country = [theView firstLayer];
+    CALayer *capital = [theView secondLayer];
     CGRect bounds = [theView bounds];
     CGPoint endPoint = [theView center];
     
@@ -240,10 +236,11 @@
     [CATransaction begin];
     [country addAnimation:countryAnimation forKey:@"newcard1"];
     [capital addAnimation:capitalAnimation forKey:@"newcard2"];
-    [CATransaction commit];    
-   
-    //CATextLayer *countryTextLayer = [[self myView] makeLabel:@"Egypt"];
+    [CATransaction commit];
+    
+    //CATextLayer *countryTextLayer = [[self myView] makeLabel:@"Some Country"];
     //[[[self myView] countryLayer] addSublayer:countryTextLayer];
 }
+
 
 @end
