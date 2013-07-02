@@ -57,8 +57,6 @@
     return swipeAnimation;
 }
 
-
-// Flip code should be here, in the controller 
 - (void)flip
 {
     NSLog(@"Message 2: I am in flip");
@@ -142,12 +140,6 @@
     [first setPosition:endPoint];
     [second setPosition:endPoint];
     [firstAnimation setValue:@"swipeAnim" forKeyPath:@"animationType"];
-    //[firstAnimation setRemovedOnCompletion:NO];  // This stmt only needed if you want to use animationForKey
-   
-    //[first lkhere]
-    // I was going to set the textlayer to nil to destroy it
-    // But on second thought, I would like to recycle it
-    // See Evernote
     [CATransaction begin];
     [first addAnimation:firstAnimation forKey:@"swipe1"];
     [second addAnimation:secondAnimation forKey:@"swipe2"];
@@ -205,6 +197,40 @@
 - (void)tryCardAgainLater
 {
     NSLog(@"tryCardAgainLater was called.");
+    if (isTransitioning) {
+        return;
+    }
+    
+    CALayer *first = [[self myView] firstLayer];
+    CALayer *second = [[self myView] secondLayer];
+    
+    CGFloat endPointX = 0.0 - (cardWidth / 2.0);
+    
+    CGPoint startPoint = CGPointMake([first position].x, [first position].y);
+    CGPoint endPoint = CGPointMake(endPointX, [first position].y);
+    
+    CAAnimation *firstAnimation = [self swipeAnimationWithDuration:0.3f
+                                                        startPoint:startPoint
+                                                          endPoint:endPoint];
+    
+    CAAnimation *secondAnimation = [self swipeAnimationWithDuration:0.3f
+                                                         startPoint:startPoint
+                                                           endPoint:endPoint];
+    
+    [firstAnimation setDelegate:self];
+    [first setPosition:endPoint];
+    [second setPosition:endPoint];
+    [firstAnimation setValue:@"swipeAnim" forKeyPath:@"animationType"];
+    //[firstAnimation setRemovedOnCompletion:NO];  // This stmt only needed if you want to use animationForKey
+    
+    //[first lkhere]
+    // I was going to set the textlayer to nil to destroy it
+    // But on second thought, I would like to recycle it
+    // See Evernote
+    [CATransaction begin];
+    [first addAnimation:firstAnimation forKey:@"swipe1"];
+    [second addAnimation:secondAnimation forKey:@"swipe2"];
+    [CATransaction commit];        
 }
 
 - (void)showNextCard
@@ -241,6 +267,5 @@
     //CATextLayer *countryTextLayer = [[self myView] makeLabel:@"Some Country"];
     //[[[self myView] countryLayer] addSublayer:countryTextLayer];
 }
-
 
 @end
