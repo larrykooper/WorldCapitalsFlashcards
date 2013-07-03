@@ -16,6 +16,7 @@
     Country *currentCard;
 }
 @property (nonatomic, weak) Country *currentCountry;
+@property (nonatomic, strong) UILabel *countLabel;
 
 - (void)flip;
 - (void)removeCard;

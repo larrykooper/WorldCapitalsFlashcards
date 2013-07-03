@@ -18,7 +18,7 @@
 #import "Country.h"
 
 @implementation WCFViewController
-@synthesize currentCountry;
+@synthesize currentCountry, countLabel;
 
  - (void)loadView
 {
@@ -147,6 +147,9 @@
     [firstAnimation setValue:@"swipeAnim" forKeyPath:@"animationType"];
     // Actually remove the card
     [[WCFCountryStore sharedStore] removeCard:currentCountry];
+    // Update label 
+    countLabel.text = [NSString stringWithFormat:@"%d cards remaining / %d cards total", [[WCFCountryStore sharedStore] numCardsRemaining],
+      [[WCFCountryStore sharedStore] numCardsTotal]];
     
     [CATransaction begin];
     [first addAnimation:firstAnimation forKey:@"swipe1"];
@@ -189,6 +192,8 @@
 {
     NSLog(@"Message 6: WCFViewController.m: viewDidLoad was called.");
     
+    // Add instructions label 
+    
     UILabel *instrsLabel = [[UILabel alloc] initWithFrame:CGRectMake(60, 340, 300, 30)];
     [self.view addSubview:instrsLabel];
 
@@ -199,6 +204,22 @@
     instrsLabel.backgroundColor = [UIColor clearColor];
     instrsLabel.font = [UIFont systemFontOfSize:12.0];
     instrsLabel.numberOfLines = 0;
+    
+    // Add 'number of cards' label
+    
+    countLabel = [[UILabel alloc] initWithFrame:CGRectMake(60, 320, 300, 30)];
+    [self.view addSubview:countLabel];
+    
+    countLabel.text = [NSString stringWithFormat:@"%d cards remaining / %d cards total", [[WCFCountryStore sharedStore] numCardsRemaining],
+                       [[WCFCountryStore sharedStore] numCardsTotal]];   
+    
+    countLabel.textColor = [UIColor blackColor];
+    
+    countLabel.textAlignment = NSTextAlignmentLeft;
+    countLabel.backgroundColor = [UIColor clearColor];
+    countLabel.font = [UIFont systemFontOfSize:12.0];
+    countLabel.numberOfLines = 0;  
+    
 
 }
 

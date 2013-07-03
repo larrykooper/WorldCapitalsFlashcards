@@ -70,4 +70,14 @@
     return [remainingCards objectAtIndex:randomIndex];
 }
 
+- (NSInteger)numCardsRemaining
+{
+    return [remainingCards count];
+}
+
+- (NSInteger)numCardsTotal;
+{
+    return [allCountries count];
+}
+
 @end

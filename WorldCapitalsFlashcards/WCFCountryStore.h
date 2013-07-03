@@ -26,4 +26,8 @@
 
 - (Country *)getRandomCardFromRemaining;
 
+- (NSInteger)numCardsRemaining;
+
+- (NSInteger)numCardsTotal;
+
 @end
