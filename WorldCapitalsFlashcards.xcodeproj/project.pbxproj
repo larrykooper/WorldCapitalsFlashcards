@@ -22,6 +22,7 @@
 		71ACCFC5177CD5AC00630C77 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 71ACCFC4177CD5AC00630C77 /* QuartzCore.framework */; };
 		71ACCFCE177CD7E600630C77 /* WCFViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 71ACCFCD177CD7E600630C77 /* WCFViewController.m */; };
 		74C92DA21783A1F900C78717 /* WCFCardLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 74C92DA11783A1F900C78717 /* WCFCardLabel.m */; };
+		74C92DA51783AC0800C78717 /* WCFConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 74C92DA41783AC0800C78717 /* WCFConstants.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -49,6 +50,8 @@
 		71ACCFCD177CD7E600630C77 /* WCFViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WCFViewController.m; path = ../WCFViewController.m; sourceTree = "<group>"; };
 		74C92DA01783A1F900C78717 /* WCFCardLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCFCardLabel.h; sourceTree = "<group>"; };
 		74C92DA11783A1F900C78717 /* WCFCardLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCFCardLabel.m; sourceTree = "<group>"; };
+		74C92DA31783ABDF00C78717 /* WCFConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCFConstants.h; sourceTree = "<group>"; };
+		74C92DA41783AC0800C78717 /* WCFConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCFConstants.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,6 +106,8 @@
 				71ACCFB7177CD53400630C77 /* WCFAppDelegate.m */,
 				74C92DA01783A1F900C78717 /* WCFCardLabel.h */,
 				74C92DA11783A1F900C78717 /* WCFCardLabel.m */,
+				74C92DA31783ABDF00C78717 /* WCFConstants.h */,
+				74C92DA41783AC0800C78717 /* WCFConstants.m */,
 				718C72F1177E2E1B00B4E03E /* WCFCountryStore.h */,
 				718C72F2177E2E1B00B4E03E /* WCFCountryStore.m */,
 				71896469177DE3E7000DC778 /* WCFView.h */,
@@ -201,6 +206,7 @@
 				718C72ED177E292D00B4E03E /* Country.m in Sources */,
 				718C72F3177E2E1B00B4E03E /* WCFCountryStore.m in Sources */,
 				74C92DA21783A1F900C78717 /* WCFCardLabel.m in Sources */,
+				74C92DA51783AC0800C78717 /* WCFConstants.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

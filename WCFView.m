@@ -10,15 +10,14 @@
 #import "WCFView.h"
 #import "WCFViewController.h"
 #import "WCFCardLabel.h"
-
-CGFloat const cardHeight = 150.0;
-CGFloat const cardWidth = 250.0;
+#import "WCFConstants.h"
 
 @implementation WCFView
 
 @synthesize firstLayer, secondLayer;
 @synthesize isFlipped;
 @synthesize myController;
+@synthesize cardLabel, capitalLabel;
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -47,7 +46,7 @@ CGFloat const cardWidth = 250.0;
         firstLayer.backgroundColor = [[UIColor whiteColor] CGColor];
         
         [firstLayer setMasksToBounds:YES];
-        WCFCardLabel *cardLabel = [[WCFCardLabel alloc] initWithText:@"Egypt"];        
+        cardLabel = [[WCFCardLabel alloc] initWithText:@"Egypt"];        
         [firstLayer addSublayer:[cardLabel textLayer]];
         
         // Second layer (the one that starts out on the bottom)
@@ -63,7 +62,7 @@ CGFloat const cardWidth = 250.0;
         secondLayer.backgroundColor = [[UIColor whiteColor] CGColor];
         [secondLayer setMasksToBounds:YES];
         
-        WCFCardLabel *capitalLabel = [[WCFCardLabel alloc] initWithText:@"Cairo"];        
+        capitalLabel = [[WCFCardLabel alloc] initWithText:@"Cairo"];        
         [secondLayer addSublayer:[capitalLabel textLayer]];
         
         // Make my two new layers sublayers of the view's layer

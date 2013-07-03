@@ -9,6 +9,7 @@
 
 #import <Foundation/Foundation.h>
 @class WCFViewController;
+@class WCFCardLabel;
 
 @interface WCFView : UIView
 {   
@@ -18,10 +19,9 @@
 @property (nonatomic, weak) WCFViewController *myController;
 @property (nonatomic, strong) CALayer *firstLayer, *secondLayer;
 @property BOOL isFlipped;
+@property (nonatomic, strong) WCFCardLabel *cardLabel;
+@property (nonatomic, strong) WCFCardLabel *capitalLabel;
 
 - (void)rotateMe;
-
-extern CGFloat const cardHeight;
-extern CGFloat const cardWidth;
 
 @end

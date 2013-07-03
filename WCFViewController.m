@@ -12,6 +12,8 @@
 #import "WCFViewController.h"
 #import <QuartzCore/QuartzCore.h>
 #import "WCFView.h"
+#import "WCFCardLabel.h"
+#import "WCFConstants.h"
 
 @implementation WCFViewController
 
@@ -238,10 +240,12 @@
     NSLog(@"showNextCard executing.");
     // This needs to get a random country from the countries that
     //  user has NOT removed from pack yet.
-    // LKHERE START
-    
     
     WCFView *theView = [self myView];
+    // LK start
+    [[theView cardLabel] updateLabel:@"Afghanistan"];
+    // LK end
+    
     CALayer *country = [theView firstLayer];
     CALayer *capital = [theView secondLayer];
     CGRect bounds = [theView bounds];
@@ -257,8 +261,7 @@
     
     CAAnimation *capitalAnimation = [self swipeAnimationWithDuration:0.3f
                                                          startPoint:startPoint
-                                                           endPoint:endPoint];
-    
+                                                           endPoint:endPoint];    
     [countryAnimation setDelegate:self];
     [country setPosition:endPoint];
     [capital setPosition:endPoint];
