@@ -6,7 +6,6 @@
 //  Copyright (c) 2013 Kooper, Laurence. All rights reserved.
 //
 
-
 #import <QuartzCore/QuartzCore.h>
 #import "WCFView.h"
 #import "WCFViewController.h"
@@ -108,7 +107,6 @@ CGFloat const cardWidth = 250.0;
     if (myPoint.y > cardTopY && myPoint.y < cardBottomY && myPoint.x > cardLeftX && myPoint.x < cardRightX) {
         [myController flip];
     }
-
 }
 
 - (void)swipeUp:(UIGestureRecognizer *)gr
@@ -122,7 +120,6 @@ CGFloat const cardWidth = 250.0;
     NSLog(@"swipeLeft was called.");
     [myController tryCardAgainLater];
 }
-
 
 - (CATextLayer *)makeLabel:(NSString *)text
 {
@@ -146,6 +143,5 @@ CGFloat const cardWidth = 250.0;
     [firstLayer setPosition:CGPointMake(self.bounds.size.width / 2, self.bounds.size.height / 2)];
     [secondLayer setPosition:CGPointMake(self.bounds.size.width / 2, self.bounds.size.height / 2)];
 }
-
 
 @end

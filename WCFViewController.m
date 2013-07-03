@@ -238,6 +238,9 @@
     NSLog(@"showNextCard executing.");
     // This needs to get a random country from the countries that
     //  user has NOT removed from pack yet.
+    // LKHERE START
+    
+    
     WCFView *theView = [self myView];
     CALayer *country = [theView firstLayer];
     CALayer *capital = [theView secondLayer];
