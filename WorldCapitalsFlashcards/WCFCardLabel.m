@@ -26,8 +26,7 @@
         [textLayer setString:text];
         [textLayer setAlignmentMode:kCAAlignmentCenter];
         [textLayer setForegroundColor:[[UIColor blackColor] CGColor]];
-        [textLayer setContentsScale:[[UIScreen mainScreen] scale]];
-        
+        [textLayer setContentsScale:[[UIScreen mainScreen] scale]];        
     }
     return self;
 }

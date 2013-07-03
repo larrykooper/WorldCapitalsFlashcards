@@ -242,9 +242,8 @@
     //  user has NOT removed from pack yet.
     
     WCFView *theView = [self myView];
-    // LK start
-    [[theView cardLabel] updateLabel:@"Afghanistan"];
-    // LK end
+    
+    [[theView cardLabel] updateLabel:@"Afghanistan"];    
     
     CALayer *country = [theView firstLayer];
     CALayer *capital = [theView secondLayer];
@@ -268,10 +267,7 @@
     [CATransaction begin];
     [country addAnimation:countryAnimation forKey:@"newcard1"];
     [capital addAnimation:capitalAnimation forKey:@"newcard2"];
-    [CATransaction commit];
-    
-    //CATextLayer *countryTextLayer = [[self myView] makeLabel:@"Some Country"];
-    //[[[self myView] countryLayer] addSublayer:countryTextLayer];
+    [CATransaction commit];    
 }
 
 @end
