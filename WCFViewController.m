@@ -18,6 +18,7 @@
 #import "Country.h"
 
 @implementation WCFViewController
+@synthesize currentCountry;
 
  - (void)loadView
 {
@@ -144,6 +145,9 @@
     [first setPosition:endPoint];
     [second setPosition:endPoint];
     [firstAnimation setValue:@"swipeAnim" forKeyPath:@"animationType"];
+    // Actually remove the card
+    [[WCFCountryStore sharedStore] removeCard:currentCountry];
+    
     [CATransaction begin];
     [first addAnimation:firstAnimation forKey:@"swipe1"];
     [second addAnimation:secondAnimation forKey:@"swipe2"];
@@ -245,8 +249,10 @@
     // Get a random card from the card that
     //  remain in the pack.
     Country *c = [[WCFCountryStore sharedStore] getRandomCardFromRemaining];
+    [self setCurrentCountry:c];
     
     [[theView cardLabel] updateLabel:[c countryName]];
+    [[theView capitalLabel] updateLabel:[c capital]];
     
     CALayer *country = [theView firstLayer];
     CALayer *capital = [theView secondLayer];

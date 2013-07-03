@@ -8,11 +8,14 @@
 // Controller for the WCF's main view.
 
 #import <Foundation/Foundation.h>
+@class Country;
 
 @interface WCFViewController : UIViewController
 {
 	BOOL isTransitioning;
+    Country *currentCard;
 }
+@property (nonatomic, weak) Country *currentCountry;
 
 - (void)flip;
 - (void)removeCard;
