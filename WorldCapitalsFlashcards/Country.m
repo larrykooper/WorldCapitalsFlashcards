@@ -29,4 +29,12 @@
     return [self initWithName:@"Country" capital:@"None"];
 }
 
+- (id)copyWithZone:(NSZone *)zone
+{
+    Country *c = [[[self class] alloc] init];
+    [c setCountryName:[self countryName]];
+    [c setCapital:[self capital]];
+    return c;    
+}
+
 @end

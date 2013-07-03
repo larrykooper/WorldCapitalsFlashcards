@@ -52,9 +52,22 @@
         Country *c = [[Country alloc] initWithName:country capital:[capitals objectAtIndex:capIndex]];
         capIndex++;
         [allCountries addObject:c];
-    }    
+    }
+    // Copy allCountries into remainingCards
+    remainingCards = [[NSMutableArray alloc] initWithArray:allCountries copyItems:YES];
     
     return YES;    
+}
+
+- (void)removeCard:(Country *)country
+{
+    [remainingCards removeObjectIdenticalTo:country];
+}
+
+- (Country *)getRandomCardFromRemaining
+{
+    NSUInteger randomIndex = arc4random() % [remainingCards count];
+    return [remainingCards objectAtIndex:randomIndex];
 }
 
 @end

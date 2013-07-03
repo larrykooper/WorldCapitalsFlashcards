@@ -9,11 +9,13 @@
 // http://www.mycodestudio.com/blog/2011/01/10/coreanimation/
 // MOTHERSHIP
 
-#import "WCFViewController.h"
 #import <QuartzCore/QuartzCore.h>
+#import "WCFViewController.h"
 #import "WCFView.h"
 #import "WCFCardLabel.h"
 #import "WCFConstants.h"
+#import "WCFCountryStore.h"
+#import "Country.h"
 
 @implementation WCFViewController
 
@@ -237,13 +239,14 @@
 
 - (void)showNextCard
 {
-    NSLog(@"showNextCard executing.");
-    // This needs to get a random country from the countries that
-    //  user has NOT removed from pack yet.
+    NSLog(@"showNextCard executing.");    
     
     WCFView *theView = [self myView];
+    // Get a random card from the card that
+    //  remain in the pack.
+    Country *c = [[WCFCountryStore sharedStore] getRandomCardFromRemaining];
     
-    [[theView cardLabel] updateLabel:@"Afghanistan"];    
+    [[theView cardLabel] updateLabel:[c countryName]];
     
     CALayer *country = [theView firstLayer];
     CALayer *capital = [theView secondLayer];

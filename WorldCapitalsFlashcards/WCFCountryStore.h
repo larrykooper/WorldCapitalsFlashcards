@@ -8,10 +8,12 @@
 // A store object for the Country. Handles external access.
 
 #import <Foundation/Foundation.h>
+@class Country;
 
 @interface WCFCountryStore : NSObject
 {
     NSMutableArray *allCountries;
+    NSMutableArray *remainingCards;
 }
 
 + (WCFCountryStore *)sharedStore;
@@ -20,6 +22,8 @@
 
 - (BOOL)loadAllCountries;
 
-//- (void)removeCard:  LKHERE
+- (void)removeCard:(Country *)country;
+
+- (Country *)getRandomCardFromRemaining;
 
 @end
