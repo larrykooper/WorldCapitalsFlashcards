@@ -9,6 +9,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "WCFView.h"
 #import "WCFViewController.h"
+#import "WCFCardLabel.h"
 
 CGFloat const cardHeight = 150.0;
 CGFloat const cardWidth = 250.0;
@@ -46,8 +47,8 @@ CGFloat const cardWidth = 250.0;
         firstLayer.backgroundColor = [[UIColor whiteColor] CGColor];
         
         [firstLayer setMasksToBounds:YES];
-        CATextLayer *textLayer = [self makeLabel:@"Egypt"];
-        [firstLayer addSublayer:textLayer];
+        WCFCardLabel *cardLabel = [[WCFCardLabel alloc] initWithText:@"Egypt"];        
+        [firstLayer addSublayer:[cardLabel textLayer]];
         
         // Second layer (the one that starts out on the bottom)
         
@@ -62,8 +63,8 @@ CGFloat const cardWidth = 250.0;
         secondLayer.backgroundColor = [[UIColor whiteColor] CGColor];
         [secondLayer setMasksToBounds:YES];
         
-        CATextLayer *backLayer = [self makeLabel:@"Cairo"];
-        [secondLayer addSublayer:backLayer];
+        WCFCardLabel *capitalLabel = [[WCFCardLabel alloc] initWithText:@"Cairo"];        
+        [secondLayer addSublayer:[capitalLabel textLayer]];
         
         // Make my two new layers sublayers of the view's layer
         // add bottom first
@@ -119,22 +120,6 @@ CGFloat const cardWidth = 250.0;
 {
     NSLog(@"swipeLeft was called.");
     [myController tryCardAgainLater];
-}
-
-- (CATextLayer *)makeLabel:(NSString *)text
-{
-    CATextLayer *label = [[CATextLayer alloc] init];
-    [label setFont:@"Helvetica"];
-    [label setFontSize:18];
-    [label setBounds:CGRectMake(0.0, 0.0, 50.0, 30.0)];  // make the bounds width = the width of card
-    // to center the text
-    [label setPosition:CGPointMake(40.0, 20.0)];  // In real life adjust it to center the text somehow
-    [label setString:text];
-    [label setAlignmentMode:kCAAlignmentCenter];
-    [label setForegroundColor:[[UIColor blackColor] CGColor]];
-    [label setContentsScale:[[UIScreen mainScreen] scale]];
-    
-    return label;
 }
 
 - (void)rotateMe
