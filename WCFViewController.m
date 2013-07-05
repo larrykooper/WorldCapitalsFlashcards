@@ -64,7 +64,7 @@
 
 - (void)flip
 {
-    NSLog(@"Message 2: I am in flip");
+    NSLog(@"Message 2: WCFViewController.m: I am in flip");
     // If we are currently transitioning, ignore any further taps on the
     // card until we are done
 	if (isTransitioning)
@@ -102,7 +102,6 @@
                                                      endValue:endValueBack];
     
     CGFloat zDistance = 1500.0f;
-    
     // Create CATransform3D data structure
     CATransform3D perspective = CATransform3DIdentity;
     perspective.m34 = -1. / zDistance;
@@ -218,8 +217,7 @@
     countLabel.textAlignment = NSTextAlignmentLeft;
     countLabel.backgroundColor = [UIColor clearColor];
     countLabel.font = [UIFont systemFontOfSize:12.0];
-    countLabel.numberOfLines = 0;  
-    
+    countLabel.numberOfLines = 0;
 
 }
 
@@ -264,7 +262,7 @@
 
 - (void)showNextCard
 {
-    NSLog(@"showNextCard executing.");    
+    NSLog(@"WCFViewController.m: showNextCard executing.");    
     
     WCFView *theView = [self myView];
     // Get a random card from the card that
@@ -272,6 +270,7 @@
     Country *c = [[WCFCountryStore sharedStore] getRandomCardFromRemaining];
     [self setCurrentCountry:c];
     
+    // Set the labels of the new card
     [[theView cardLabel] updateLabel:[c countryName]];
     [[theView capitalLabel] updateLabel:[c capital]];
     
