@@ -267,6 +267,12 @@
     NSLog(@"WCFViewController.m: showNextCard executing.");    
     
     WCFView *theView = [self myView];
+    if ([theView isFlipped]) {
+        NSLog(@"theView isFlipped");
+    } else {
+        NSLog(@"theView is NOT Flipped");
+    }
+        
     // Get a random card from the card that
     //  remain in the pack.
     Country *c = [[WCFCountryStore sharedStore] getRandomCardFromRemaining];
