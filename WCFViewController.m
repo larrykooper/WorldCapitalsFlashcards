@@ -67,8 +67,10 @@
     NSLog(@"Message 2: WCFViewController.m: I am in flip");
     // If we are currently transitioning, ignore any further taps on the
     // card until we are done
-	if (isTransitioning)
+	if (isTransitioning) {
+        NSLog(@"Message 21: WCFViewController: in flip we transitioning, returning");
 		return;
+    }
     
     CALayer *front;
     CALayer *back;    
@@ -115,7 +117,7 @@
     [front addAnimation:frontAnimation forKey:@"flip"];
     [back addAnimation:backAnimation forKey:@"flip"];
     [CATransaction commit];
-	
+
 }
 
 - (void)removeCard
@@ -279,7 +281,7 @@
     CGRect bounds = [theView bounds];
     CGPoint endPoint = [theView center];
     
-    CGFloat startPointX =  bounds.size.width + (cardWidth / 2.0);
+    CGFloat startPointX =  bounds.size.width + (cardWidth / 2.0) + 30;
     
     CGPoint startPoint = CGPointMake(startPointX, endPoint.y);
     
