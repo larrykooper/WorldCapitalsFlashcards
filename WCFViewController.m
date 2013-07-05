@@ -43,8 +43,8 @@
     
     // Hold the view in the state reached by the animation until we can fix it, or else we get an annoying flicker
 	// this really means keep the state of the object at whatever the anim ends at
-    flipAnimation.fillMode = kCAFillModeForwards;
-    flipAnimation.removedOnCompletion = NO;
+    //flipAnimation.fillMode = kCAFillModeForwards;
+    //flipAnimation.removedOnCompletion = NO;
     
     return flipAnimation;
 }
@@ -93,29 +93,33 @@
     }
     
 	CAAnimation *frontAnimation = [self
-                                 flipAnimationWithDuration:0.75f
+                                 flipAnimationWithDuration:3.0f
                                                 startValue:startValueFront
                                                   endValue:endValueFront];
     
     
     CAAnimation *backAnimation = [self
-                                    flipAnimationWithDuration:0.75f
+                                    flipAnimationWithDuration:3.0f
                                                    startValue:startValueBack
                                                      endValue:endValueBack];
+
+    [front setValue:[NSNumber numberWithFloat:endValueFront] forKeyPath:@"transform.rotation.y"];
+    [back setValue:[NSNumber numberWithFloat:endValueBack] forKeyPath:@"transform.rotation.y"];
     
-    CGFloat zDistance = 1500.0f;
-    // Create CATransform3D data structure
-    CATransform3D perspective = CATransform3DIdentity;
-    perspective.m34 = -1. / zDistance;
-    front.transform = perspective;
-    back.transform = perspective;
+    
+//    CGFloat zDistance = 1500.0f;
+//    // Create CATransform3D data structure
+//    CATransform3D perspective = CATransform3DIdentity;
+//    perspective.m34 = -1. / zDistance;
+//    front.transform = perspective;
+//    back.transform = perspective;
     
     frontAnimation.delegate = self;
     NSLog(@"Message 8: WCFViewController.m: About to do setValue");
     [frontAnimation setValue:@"flipAnim" forKeyPath:@"animationType"];
     [CATransaction begin];
-    [front addAnimation:frontAnimation forKey:@"flip"];
-    [back addAnimation:backAnimation forKey:@"flip"];
+    [front addAnimation:frontAnimation forKey:@"flip1"];
+    [back addAnimation:backAnimation forKey:@"flip2"];
     [CATransaction commit];
 
 }
