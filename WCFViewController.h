@@ -17,6 +17,7 @@
 }
 @property (nonatomic, weak) Country *currentCountry;
 @property (nonatomic, strong) UILabel *countLabel;
+@property BOOL dismissedCapital;
 
 - (void)flip;
 - (void)removeCard;
