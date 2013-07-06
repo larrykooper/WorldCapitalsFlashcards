@@ -149,7 +149,7 @@
     [first setPosition:endPoint];
     [second setPosition:endPoint];
     [firstAnimation setValue:@"swipeAnim" forKeyPath:@"animationType"];
-    // Actually remove the card
+    // Actually remove the card from the pack
     [[WCFCountryStore sharedStore] removeCard:currentCountry];
     // Update label 
     countLabel.text = [NSString stringWithFormat:@"%d cards remaining / %d cards total", [[WCFCountryStore sharedStore] numCardsRemaining],
@@ -266,6 +266,11 @@
 
 - (void)showNextCard
 {
+    if ([[WCFCountryStore sharedStore] cardDeckEmpty]) {
+        NSLog(@"Message 22: WCFViewController: Card Deck is empty");
+        [self showNoMoreCards];
+        return;
+    }
     NSLog(@"WCFViewController.m: showNextCard executing.");    
     
     WCFView *theView = [self myView];
@@ -313,7 +318,26 @@
     [CATransaction begin];
     [country addAnimation:countryAnimation forKey:@"newcard1"];
     [capital addAnimation:capitalAnimation forKey:@"newcard2"];
-    [CATransaction commit];    
+    [CATransaction commit];
+}
+
+- (void)showNoMoreCards
+{
+    NSLog(@"Message 23: WCFViewController: executing showNoMoreCards");
+    CGRect nmcFrame = CGRectMake(30, 240, 300, 50);
+    UIView *nmcView = [[UIView alloc] initWithFrame:nmcFrame];
+    [self.view addSubview:nmcView];
+    UILabel *nmcLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 20, 300, 50)];
+   
+    [nmcLabel setText:@"No more cards!"];
+    [nmcLabel setTextColor:[UIColor blackColor]];
+    
+    [nmcLabel setTextAlignment: NSTextAlignmentCenter];  
+    
+    [nmcLabel setBackgroundColor:[UIColor clearColor]];
+    [nmcLabel setFont:[UIFont systemFontOfSize:16.0]];
+       
+    [nmcView addSubview:nmcLabel];    
 }
 
 @end

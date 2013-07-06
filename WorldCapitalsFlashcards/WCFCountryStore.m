@@ -80,4 +80,9 @@
     return [allCountries count];
 }
 
+- (BOOL)cardDeckEmpty
+{
+    return ([self numCardsRemaining] == 0);
+}
+
 @end

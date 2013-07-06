@@ -30,4 +30,6 @@
 
 - (NSInteger)numCardsTotal;
 
+- (BOOL)cardDeckEmpty;
+
 @end
