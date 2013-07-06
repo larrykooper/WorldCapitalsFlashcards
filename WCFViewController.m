@@ -5,9 +5,8 @@
 //  Created by Kooper, Laurence on 6/27/13.
 //  Copyright (c) 2013 Kooper, Laurence. All rights reserved.
 //
-// Code from Gary Myers
+//  Some card-flipping code from Gary Myers
 // http://www.mycodestudio.com/blog/2011/01/10/coreanimation/
-// MOTHERSHIP
 
 #import <QuartzCore/QuartzCore.h>
 #import "WCFViewController.h"
@@ -26,6 +25,40 @@
     NSLog(@"Message 5: WCFViewController.m: loadView was called.");
     [self setView:[[WCFView alloc] initWithFrame:[[UIScreen mainScreen] bounds]]];
     [[self myView] setMyController:self];
+    [[self myView] initLayers];
+}
+
+- (void)viewDidLoad
+{
+    NSLog(@"Message 6: WCFViewController.m: viewDidLoad was called.");
+    
+    // Add instructions label
+    
+    UILabel *instrsLabel = [[UILabel alloc] initWithFrame:CGRectMake(60, 340, 300, 30)];
+    [self.view addSubview:instrsLabel];
+    
+    instrsLabel.text = @"Swipe up: remove card\nSwipe left: try card again later";
+    instrsLabel.textColor = [UIColor blackColor];
+    
+    instrsLabel.textAlignment = NSTextAlignmentLeft;
+    instrsLabel.backgroundColor = [UIColor clearColor];
+    instrsLabel.font = [UIFont systemFontOfSize:12.0];
+    instrsLabel.numberOfLines = 0;
+    
+    // Add 'number of cards' label
+    
+    countLabel = [[UILabel alloc] initWithFrame:CGRectMake(60, 320, 300, 30)];
+    [self.view addSubview:countLabel];
+    
+    countLabel.text = [NSString stringWithFormat:@"%d cards remaining / %d cards total", [[WCFCountryStore sharedStore] numCardsRemaining],
+                       [[WCFCountryStore sharedStore] numCardsTotal]];
+    
+    countLabel.textColor = [UIColor blackColor];
+    
+    countLabel.textAlignment = NSTextAlignmentLeft;
+    countLabel.backgroundColor = [UIColor clearColor];
+    countLabel.font = [UIFont systemFontOfSize:12.0];
+    countLabel.numberOfLines = 0;
 }
 
 - (CAAnimation *)flipAnimationWithDuration:(NSTimeInterval)aDuration
@@ -123,6 +156,7 @@
 
 }
 
+// Does the animation of making the card disappear
 - (void)removeCard
 {
     if (isTransitioning) {
@@ -148,12 +182,9 @@
     [firstAnimation setDelegate:self];
     [first setPosition:endPoint];
     [second setPosition:endPoint];
-    [firstAnimation setValue:@"swipeAnim" forKeyPath:@"animationType"];
-    // Actually remove the card from the pack
-    [[WCFCountryStore sharedStore] removeCard:currentCountry];
-    // Update label 
-    countLabel.text = [NSString stringWithFormat:@"%d cards remaining / %d cards total", [[WCFCountryStore sharedStore] numCardsRemaining],
-      [[WCFCountryStore sharedStore] numCardsTotal]];
+    [firstAnimation setValue:@"swipeUpAnim" forKeyPath:@"animationType"];
+    
+   
     
     [CATransaction begin];
     [first addAnimation:firstAnimation forKey:@"swipe1"];
@@ -167,7 +198,27 @@
 {
     NSLog(@"Message 3: WCFViewController.m: I am in animationDidStop");
     
-    if ([[animation valueForKey:@"animationType"] isEqual:@"swipeAnim"]) {
+    if ([[animation valueForKey:@"animationType"] isEqual:@"swipeUpAnim"]) {
+        NSLog(@"Message 24: WCFViewController: isEqual swipeUpAnim executing");
+        NSLog(@"Message 25: Current country is: %@", [currentCountry countryName]);
+        // Actually remove the card from the pack
+        [[WCFCountryStore sharedStore] removeCard:currentCountry];
+        // Update label
+        
+        NSString *myFormat;
+        if ([[WCFCountryStore sharedStore] numCardsRemaining] == 1) {
+            NSLog(@"Message 23: WCFViewController - One more card");
+            myFormat = @"%d card remaining / %d cards total";
+        } else {
+            myFormat = @"%d cards remaining / %d cards total";
+        }
+        
+        countLabel.text = [NSString stringWithFormat:myFormat, [[WCFCountryStore sharedStore] numCardsRemaining],
+                           [[WCFCountryStore sharedStore] numCardsTotal]];
+    }
+    
+    if ([[animation valueForKey:@"animationType"] isEqual:@"swipeUpAnim"] ||
+        [[animation valueForKey:@"animationType"] isEqual:@"swipeLeftAnim"]) {
         NSLog(@"Swipe has ended.");
         [self showNextCard];
     }
@@ -192,38 +243,6 @@
     return YES;
 }
 
-- (void)viewDidLoad
-{
-    NSLog(@"Message 6: WCFViewController.m: viewDidLoad was called.");
-    
-    // Add instructions label 
-    
-    UILabel *instrsLabel = [[UILabel alloc] initWithFrame:CGRectMake(60, 340, 300, 30)];
-    [self.view addSubview:instrsLabel];
-
-    instrsLabel.text = @"Swipe up: remove card\nSwipe left: try card again later";
-    instrsLabel.textColor = [UIColor blackColor];
-
-    instrsLabel.textAlignment = NSTextAlignmentLeft;
-    instrsLabel.backgroundColor = [UIColor clearColor];
-    instrsLabel.font = [UIFont systemFontOfSize:12.0];
-    instrsLabel.numberOfLines = 0;
-    
-    // Add 'number of cards' label
-    
-    countLabel = [[UILabel alloc] initWithFrame:CGRectMake(60, 320, 300, 30)];
-    [self.view addSubview:countLabel];
-    
-    countLabel.text = [NSString stringWithFormat:@"%d cards remaining / %d cards total", [[WCFCountryStore sharedStore] numCardsRemaining],
-                       [[WCFCountryStore sharedStore] numCardsTotal]];   
-    
-    countLabel.textColor = [UIColor blackColor];
-    
-    countLabel.textAlignment = NSTextAlignmentLeft;
-    countLabel.backgroundColor = [UIColor clearColor];
-    countLabel.font = [UIFont systemFontOfSize:12.0];
-    countLabel.numberOfLines = 0;
-}
 
 - (void)tryCardAgainLater
 {
@@ -251,13 +270,8 @@
     [firstAnimation setDelegate:self];
     [first setPosition:endPoint];
     [second setPosition:endPoint];
-    [firstAnimation setValue:@"swipeAnim" forKeyPath:@"animationType"];
-    //[firstAnimation setRemovedOnCompletion:NO];  // This stmt only needed if you want to use animationForKey
-    
-    //[first lkhere]
-    // I was going to set the textlayer to nil to destroy it
-    // But on second thought, I would like to recycle it
-    // See Evernote
+    [firstAnimation setValue:@"swipeLeftAnim" forKeyPath:@"animationType"];
+  
     [CATransaction begin];
     [first addAnimation:firstAnimation forKey:@"swipe1"];
     [second addAnimation:secondAnimation forKey:@"swipe2"];

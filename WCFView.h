@@ -23,5 +23,6 @@
 @property (nonatomic, strong) WCFCardLabel *capitalLabel;
 
 - (void)rotateMe;
+- (void)initLayers;
 
 @end
