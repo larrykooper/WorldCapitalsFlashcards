@@ -223,7 +223,6 @@
     countLabel.backgroundColor = [UIColor clearColor];
     countLabel.font = [UIFont systemFontOfSize:12.0];
     countLabel.numberOfLines = 0;
-
 }
 
 - (void)tryCardAgainLater
@@ -283,16 +282,14 @@
     Country *c = [[WCFCountryStore sharedStore] getRandomCardFromRemaining];
     [self setCurrentCountry:c];
     
-    if (dismissedCapital) {
-        
+    if (dismissedCapital) {        
         [[theView cardLabel] updateLabel:[c capital]];
         [[theView capitalLabel] updateLabel:[c countryName]];
         
     } else {
         [[theView cardLabel] updateLabel:[c countryName]];
         [[theView capitalLabel] updateLabel:[c capital]];        
-    }
-    
+    }    
        
     CALayer *country = [theView firstLayer];
     CALayer *capital = [theView secondLayer];

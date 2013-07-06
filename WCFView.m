@@ -11,6 +11,8 @@
 #import "WCFViewController.h"
 #import "WCFCardLabel.h"
 #import "WCFConstants.h"
+#import "WCFCountryStore.h"
+#import "Country.h"
 
 @implementation WCFView
 
@@ -29,6 +31,9 @@
         
         isFlipped = NO;
         
+        // Pick a random country
+        Country *c = [[WCFCountryStore sharedStore] getRandomCardFromRemaining];
+        
         // Create a CALayer object
         // FIRST LAYER
         
@@ -46,7 +51,7 @@
         firstLayer.backgroundColor = [[UIColor whiteColor] CGColor];
         
         [firstLayer setMasksToBounds:YES];
-        cardLabel = [[WCFCardLabel alloc] initWithText:@"Egypt"];        
+        cardLabel = [[WCFCardLabel alloc] initWithText:[c countryName]];
         [firstLayer addSublayer:[cardLabel textLayer]];
         
         // Second layer (the one that starts out on the bottom)
@@ -62,7 +67,7 @@
         secondLayer.backgroundColor = [[UIColor whiteColor] CGColor];
         [secondLayer setMasksToBounds:YES];
         
-        capitalLabel = [[WCFCardLabel alloc] initWithText:@"Cairo"];        
+        capitalLabel = [[WCFCardLabel alloc] initWithText:[c capital]];
         [secondLayer addSublayer:[capitalLabel textLayer]];
         
         // Make my two new layers sublayers of the view's layer
