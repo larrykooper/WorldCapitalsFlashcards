@@ -29,9 +29,7 @@
 }
 
 - (void)initLayers{
-    [self setBackgroundColor:[UIColor colorWithRed:0.424f green:0.506f blue:0.353f alpha:1.00f]];
-    
-    //isFlipped = NO;
+    [self setBackgroundColor:[UIColor colorWithRed:0.424f green:0.506f blue:0.353f alpha:1.00f]];    
     
     // Pick a random country
     Country *c = [[WCFCountryStore sharedStore] getRandomCardFromRemaining];
