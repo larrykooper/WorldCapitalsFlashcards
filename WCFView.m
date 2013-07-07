@@ -19,7 +19,7 @@
 @synthesize firstLayer, secondLayer;
 @synthesize isFlipped;
 @synthesize myController;
-@synthesize cardLabel, capitalLabel;
+@synthesize firstLabel, secondLabel;
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -31,7 +31,7 @@
 - (void)initLayers{
     [self setBackgroundColor:[UIColor colorWithRed:0.424f green:0.506f blue:0.353f alpha:1.00f]];
     
-    isFlipped = NO;
+    //isFlipped = NO;
     
     // Pick a random country
     Country *c = [[WCFCountryStore sharedStore] getRandomCardFromRemaining];
@@ -56,8 +56,8 @@
     firstLayer.backgroundColor = [[UIColor whiteColor] CGColor];
     
     [firstLayer setMasksToBounds:YES];
-    cardLabel = [[WCFCardLabel alloc] initWithText:[c countryName]];
-    [firstLayer addSublayer:[cardLabel textLayer]];
+    firstLabel = [[WCFCardLabel alloc] initWithText:[c countryName]];
+    [firstLayer addSublayer:[firstLabel textLayer]];
     
     // Second layer (the one that starts out on the bottom)
     
@@ -72,8 +72,8 @@
     secondLayer.backgroundColor = [[UIColor whiteColor] CGColor];
     [secondLayer setMasksToBounds:YES];
     
-    capitalLabel = [[WCFCardLabel alloc] initWithText:[c capital]];
-    [secondLayer addSublayer:[capitalLabel textLayer]];
+    secondLabel = [[WCFCardLabel alloc] initWithText:[c capital]];
+    [secondLayer addSublayer:[secondLabel textLayer]];
     
     // Make my two new layers sublayers of the view's layer
     // add bottom first
@@ -105,7 +105,7 @@
 
 - (void)tap:(UIGestureRecognizer *)gr
 {
-    NSLog(@"Message 1: WCFView.m: I am in tap handler");
+    NSLog(@"Message 1: WCFView: I am in tap handler");
     CGPoint myPoint = [gr locationInView:self];
     CGFloat cardTopY = ((self.bounds.size.height / 2.0) - cardHeight / 2.0);
     CGFloat cardBottomY = cardTopY + cardHeight;
@@ -119,7 +119,7 @@
 
 - (void)swipeUp:(UIGestureRecognizer *)gr
 {
-    NSLog(@"swipeUp was called.");
+    NSLog(@"Message 41: WCFView: swipeUp was called.");
     [myController removeCard];
 }
 

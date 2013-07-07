@@ -17,7 +17,10 @@
 }
 @property (nonatomic, weak) Country *currentCountry;
 @property (nonatomic, strong) UILabel *countLabel;
-@property BOOL dismissedCapital;
+@property (nonatomic, strong) NSString *firstLayerStatus;
+@property (nonatomic, strong) NSString *secondLayerStatus;
+@property (nonatomic, strong) NSString *firstLabelShowing;
+@property (nonatomic, strong) NSString *secondLabelShowing;
 
 - (void)flip;
 - (void)removeCard;

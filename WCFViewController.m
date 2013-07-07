@@ -18,14 +18,19 @@
 
 @implementation WCFViewController
 @synthesize currentCountry, countLabel;
-@synthesize dismissedCapital;
+@synthesize firstLayerStatus, secondLayerStatus;
+@synthesize firstLabelShowing, secondLabelShowing;
 
- - (void)loadView
+- (void)loadView
 {
     NSLog(@"Message 5: WCFViewController.m: loadView was called.");
     [self setView:[[WCFView alloc] initWithFrame:[[UIScreen mainScreen] bounds]]];
     [[self myView] setMyController:self];
     [[self myView] initLayers];
+    [self setFirstLayerStatus:@"UP"];
+    [self setSecondLayerStatus:@"DOWN"];
+    [self setFirstLabelShowing:@"COUNTRY"];
+    [self setSecondLabelShowing:@"CAPITAL"];
 }
 
 - (void)viewDidLoad
@@ -98,24 +103,19 @@
 
 - (void)flip
 {
-    NSLog(@"Message 2: WCFViewController.m: I am in flip");
+    NSLog(@"Message 2: WCFViewController: I am in flip");
     // If we are currently transitioning, ignore any further taps on the
     // card until we are done
 	if (isTransitioning) {
         NSLog(@"Message 21: WCFViewController: in flip we transitioning, returning");
 		return;
     }
-    if ([[self myView] isFlipped]) {
-        NSLog(@"Message 31: WCFViewController: isFlipped is YES");
-    } else {
-        NSLog(@"Message 31: WCFViewController: isFlipped is NO");
-    }
     
-    if ([self dismissedCapital]) {
-        NSLog(@"Message 32: WCFViewController: dismissedCapital is YES");
-    } else {
-        NSLog(@"Message 32: WCFViewController: dismissedCapital is NO");
-    }    
+    NSLog(@"Message 44: WCFViewController: firstLayerStatus: %@", [self firstLayerStatus]);
+    NSLog(@"Message 45: WCFViewController: secondLayerStatus: %@", [self secondLayerStatus]);
+        
+    NSLog(@"Message 46: WCFViewController: firstLabelShowing: %@", [self firstLabelShowing]);
+    NSLog(@"Message 47: WCFViewController: secondLabelShowing: %@", [self secondLabelShowing]);
     
     CALayer *front;
     CALayer *back;    
@@ -137,8 +137,8 @@
         endValueBack = 0.0f;
     }
     
-    if (dismissedCapital && ![[self myView] isFlipped]) {
-        NSLog(@"Message 40: WCFViewController: executing dism");
+    if ([secondLayerStatus isEqual:@"UP"] && ![[self myView] isFlipped]) {
+        NSLog(@"Message 40: WCFViewController: ");
         front = [[self myView] firstLayer];
         back = [[self myView] secondLayer];
         startValueFront = M_PI;;
@@ -147,15 +147,14 @@
         endValueBack = -M_PI;        
     }    
     
-    if (dismissedCapital && [[self myView] isFlipped]) {
-        
-        front = [[self myView] secondLayer];  
-        back = [[self myView] firstLayer];    
-        startValueFront = -M_PI;  
-        endValueFront = 0.0;
-        startValueBack = 0.0;
-        endValueBack = M_PI;        
-    }
+//    if ([secondLayerStatus isEqual:@"UP"] && [[self myView] isFlipped]) {        
+//        front = [[self myView] secondLayer];  
+//        back = [[self myView] firstLayer];    
+//        startValueFront = -M_PI;  
+//        endValueFront = 0.0;
+//        startValueBack = 0.0;
+//        endValueBack = M_PI;        
+//    }
     
 	CAAnimation *frontAnimation = [self
                                  flipAnimationWithDuration:0.75f
@@ -177,7 +176,7 @@
     back.transform = perspective;
     
     frontAnimation.delegate = self;
-    NSLog(@"Message 8: WCFViewController.m: About to do setValue");
+    NSLog(@"Message 8: WCFViewController: About to do THE ACTUAL FLIPPING");
     [frontAnimation setValue:@"flipAnim" forKeyPath:@"animationType"];
     [CATransaction begin];
     // Note -- the two keys must be SAME for it to work 
@@ -213,9 +212,7 @@
     [firstAnimation setDelegate:self];
     [first setPosition:endPoint];
     [second setPosition:endPoint];
-    [firstAnimation setValue:@"swipeUpAnim" forKeyPath:@"animationType"];
-    
-   
+    [firstAnimation setValue:@"swipeUpAnim" forKeyPath:@"animationType"];   
     
     [CATransaction begin];
     [first addAnimation:firstAnimation forKey:@"swipe1"];
@@ -227,18 +224,18 @@
 
 - (void)animationDidStop:(CAAnimation *)animation finished:(BOOL)flag
 {
-    NSLog(@"Message 3: WCFViewController.m: I am in animationDidStop");
+    NSLog(@"Message 3: WCFViewController: I am in animationDidStop");
     
     if ([[animation valueForKey:@"animationType"] isEqual:@"swipeUpAnim"]) {
         NSLog(@"Message 24: WCFViewController: isEqual swipeUpAnim executing");
-        NSLog(@"Message 25: Current country is: %@", [currentCountry countryName]);
+        NSLog(@"Message 33: WCFViewController: Current country is: %@", [currentCountry countryName]);
         // Actually remove the card from the pack
         [[WCFCountryStore sharedStore] removeCard:currentCountry];
         // Update label
         
         NSString *myFormat;
         if ([[WCFCountryStore sharedStore] numCardsRemaining] == 1) {
-            NSLog(@"Message 23: WCFViewController - One more card");
+            NSLog(@"Message 23: WCFViewController: One more card");
             myFormat = @"%d card remaining / %d cards total";
         } else {
             myFormat = @"%d cards remaining / %d cards total";
@@ -250,14 +247,21 @@
     
     if ([[animation valueForKey:@"animationType"] isEqual:@"swipeUpAnim"] ||
         [[animation valueForKey:@"animationType"] isEqual:@"swipeLeftAnim"]) {
-        NSLog(@"Swipe has ended.");
+        NSLog(@"Message 34: WCFViewController: Swipe has ended.");
         [self showNextCard];
     }
 
     if ([[animation valueForKey:@"animationType"] isEqual:@"flipAnim"]) {
-        NSLog(@"Message 4: We are in flipStop");
-        // reverse isFlipped
-        [[self myView] setIsFlipped:![[self myView] isFlipped]];
+        NSLog(@"Message 4: WCFViewController: We are in flipStop");
+        
+        // reverse layer statuses
+        if ([firstLayerStatus isEqual:@"UP"]) {
+            [self setFirstLayerStatus:@"DOWN"];
+            [self setSecondLayerStatus:@"UP"];
+        } else {            
+            [self setFirstLayerStatus:@"UP"];
+            [self setSecondLayerStatus:@"DOWN"];
+        }
     }
     
 	isTransitioning = NO;
@@ -317,32 +321,30 @@
         [self showNoMoreCards];
         return;
     }
-    NSLog(@"WCFViewController.m: showNextCard executing.");    
+    NSLog(@"Message 42: WCFViewController: showNextCard executing.");    
     
     WCFView *theView = [self myView];
-    if ([theView isFlipped]) {
-        NSLog(@"theView isFlipped");
-        dismissedCapital = YES;
-    } else {
-        NSLog(@"theView is NOT Flipped");
-        dismissedCapital = NO;
-    }
-        
+    
     // Get a random card from the card that
     //  remain in the pack.
     Country *c = [[WCFCountryStore sharedStore] getRandomCardFromRemaining];
     [self setCurrentCountry:c];
-    
-    if (dismissedCapital) {        
-        [[theView cardLabel] updateLabel:[c capital]];
-        [[theView capitalLabel] updateLabel:[c countryName]];
-        // Card is not flipped anymore because we'll be country side up        
-        [[self myView] setIsFlipped:NO];        
+   
+    if ([secondLayerStatus isEqual:@"UP"]) {
+        [[theView firstLabel] updateLabel:[c capital]];
+        [[theView secondLabel] updateLabel:[c countryName]];
+        
+        [self setFirstLabelShowing:@"CAPITAL"];
+        [self setSecondLabelShowing:@"COUNTRY"];
+        
     } else {
-        [[theView cardLabel] updateLabel:[c countryName]];
-        [[theView capitalLabel] updateLabel:[c capital]];        
+        [[theView firstLabel] updateLabel:[c countryName]];
+        [[theView secondLabel] updateLabel:[c capital]];
+        
+        [self setFirstLabelShowing:@"COUNTRY"];
+        [self setSecondLabelShowing:@"CAPITAL"];        
     }    
-       
+    // Animate moving the new card in from the right 
     CALayer *country = [theView firstLayer];
     CALayer *capital = [theView secondLayer];
     CGRect bounds = [theView bounds];
