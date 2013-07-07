@@ -159,20 +159,7 @@
         endValueFront = 0.0;
         startValueBack = 0.0;
         endValueBack = M_PI;        
-    }
-    
-//   MYSTERY SETUP 
-//   I don't know when I will need it, or if I will need it
-//    Probably won't need it 
-//    if ([firstLayerStatus isEqual:@"UP"] && [firstLabelShowing isEqual:@"CAPITAL"]) {
-//        NSLog(@"Message 55: WCFViewController: ");
-//        front = [[self myView] secondLayer];
-//        back = [[self myView] firstLayer];
-//        startValueFront = 0.0f;
-//        endValueFront = M_PI;
-//        startValueBack = -M_PI;
-//        endValueBack = 0.0f;
-//    }
+    }    
     
 	CAAnimation *frontAnimation = [self
                                  flipAnimationWithDuration:0.75f
@@ -303,6 +290,7 @@
         return;
     }
     
+    // Animate the card leaving to the left 
     CALayer *first = [[self myView] firstLayer];
     CALayer *second = [[self myView] secondLayer];
     
