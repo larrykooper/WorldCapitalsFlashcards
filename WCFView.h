@@ -18,7 +18,6 @@
 
 @property (nonatomic, weak) WCFViewController *myController;
 @property (nonatomic, strong) CALayer *firstLayer, *secondLayer;
-@property BOOL isFlipped;
 @property (nonatomic, strong) WCFCardLabel *firstLabel;
 @property (nonatomic, strong) WCFCardLabel *secondLabel;
 

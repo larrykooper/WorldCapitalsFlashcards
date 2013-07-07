@@ -17,7 +17,6 @@
 @implementation WCFView
 
 @synthesize firstLayer, secondLayer;
-@synthesize isFlipped;
 @synthesize myController;
 @synthesize firstLabel, secondLabel;
 

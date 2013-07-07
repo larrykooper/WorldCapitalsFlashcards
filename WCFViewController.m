@@ -165,7 +165,7 @@
         endValueBack = M_PI;        
     }
     
-//   MYSTERY SETUP NUMBER 2
+//   MYSTERY SETUP 
 //   I don't know when I will need it, or if I will need it
     // this did not work, got the flash
 //    if ([firstLayerStatus isEqual:@"UP"] && [firstLabelShowing isEqual:@"CAPITAL"]) {
