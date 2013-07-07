@@ -105,6 +105,17 @@
         NSLog(@"Message 21: WCFViewController: in flip we transitioning, returning");
 		return;
     }
+    if ([[self myView] isFlipped]) {
+        NSLog(@"Message 31: WCFViewController: isFlipped is YES");
+    } else {
+        NSLog(@"Message 31: WCFViewController: isFlipped is NO");
+    }
+    
+    if ([self dismissedCapital]) {
+        NSLog(@"Message 32: WCFViewController: dismissedCapital is YES");
+    } else {
+        NSLog(@"Message 32: WCFViewController: dismissedCapital is NO");
+    }    
     
     CALayer *front;
     CALayer *back;    
@@ -124,6 +135,26 @@
         endValueFront = M_PI;
         startValueBack = -M_PI;
         endValueBack = 0.0f;
+    }
+    
+    if (dismissedCapital && ![[self myView] isFlipped]) {
+        NSLog(@"Message 40: WCFViewController: executing dism");
+        front = [[self myView] firstLayer];
+        back = [[self myView] secondLayer];
+        startValueFront = M_PI;;
+        endValueFront = 0.0;
+        startValueBack = 0.0;
+        endValueBack = -M_PI;        
+    }    
+    
+    if (dismissedCapital && [[self myView] isFlipped]) {
+        
+        front = [[self myView] secondLayer];  
+        back = [[self myView] firstLayer];    
+        startValueFront = -M_PI;  
+        endValueFront = 0.0;
+        startValueBack = 0.0;
+        endValueBack = M_PI;        
     }
     
 	CAAnimation *frontAnimation = [self
@@ -225,6 +256,7 @@
 
     if ([[animation valueForKey:@"animationType"] isEqual:@"flipAnim"]) {
         NSLog(@"Message 4: We are in flipStop");
+        // reverse isFlipped
         [[self myView] setIsFlipped:![[self myView] isFlipped]];
     }
     
@@ -304,7 +336,8 @@
     if (dismissedCapital) {        
         [[theView cardLabel] updateLabel:[c capital]];
         [[theView capitalLabel] updateLabel:[c countryName]];
-        
+        // Card is not flipped anymore because we'll be country side up        
+        [[self myView] setIsFlipped:NO];        
     } else {
         [[theView cardLabel] updateLabel:[c countryName]];
         [[theView capitalLabel] updateLabel:[c capital]];        
