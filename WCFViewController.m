@@ -121,32 +121,43 @@
     CALayer *back;    
     CGFloat startValueFront, endValueFront, startValueBack, endValueBack;
     
-    if (![[self myView] isFlipped]) {
-        front = [[self myView] firstLayer];
-        back = [[self myView] secondLayer];
-        startValueFront = 0.0f;
-        endValueFront = -M_PI;
-        startValueBack = M_PI;
-        endValueBack = 0.0f;
-    } else {
+    if ([firstLayerStatus isEqual:@"DOWN"] && [firstLabelShowing isEqual:@"COUNTRY"]) {
         front = [[self myView] secondLayer];
         back = [[self myView] firstLayer];
         startValueFront = 0.0f;
         endValueFront = M_PI;
         startValueBack = -M_PI;
         endValueBack = 0.0f;
+    } else {
+    
+        if (![[self myView] isFlipped]) {
+            front = [[self myView] firstLayer];
+            back = [[self myView] secondLayer];
+            startValueFront = 0.0f;
+            endValueFront = -M_PI;
+            startValueBack = M_PI;
+            endValueBack = 0.0f;
+        } else {
+            front = [[self myView] secondLayer];
+            back = [[self myView] firstLayer];
+            startValueFront = 0.0f;
+            endValueFront = M_PI;
+            startValueBack = -M_PI;
+            endValueBack = 0.0f;
+        }
+        
+        if ([secondLayerStatus isEqual:@"UP"] && ![[self myView] isFlipped]) {
+            NSLog(@"Message 40: WCFViewController: ");
+            front = [[self myView] firstLayer];
+            back = [[self myView] secondLayer];
+            startValueFront = M_PI;;
+            endValueFront = 0.0;
+            startValueBack = 0.0;
+            endValueBack = -M_PI;        
+        }
     }
     
-    if ([secondLayerStatus isEqual:@"UP"] && ![[self myView] isFlipped]) {
-        NSLog(@"Message 40: WCFViewController: ");
-        front = [[self myView] firstLayer];
-        back = [[self myView] secondLayer];
-        startValueFront = M_PI;;
-        endValueFront = 0.0;
-        startValueBack = 0.0;
-        endValueBack = -M_PI;        
-    }    
-    
+// keep this because I will need this setup at some time 
 //    if ([secondLayerStatus isEqual:@"UP"] && [[self myView] isFlipped]) {        
 //        front = [[self myView] secondLayer];  
 //        back = [[self myView] firstLayer];    
