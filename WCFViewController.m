@@ -352,7 +352,8 @@
     CALayer *country = [theView firstLayer];
     CALayer *capital = [theView secondLayer];
     CGRect bounds = [theView bounds];
-    CGPoint endPoint = [theView center];
+    CGPoint endPoint = CGPointMake(theView.bounds.size.width / 2, theView.bounds.size.height / 2);
+    NSLog(@"Message 57: WCFViewController: endPoint: x: %f y: %f", endPoint.x, endPoint.y);
     
     CGFloat startPointX =  bounds.size.width + (cardWidth / 2.0) + 30;
     

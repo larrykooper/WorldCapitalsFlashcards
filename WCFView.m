@@ -47,7 +47,7 @@
     [firstLayer setBounds:CGRectMake(0.0, 0.0, cardWidth, cardHeight)];
     
     // Give it a location
-    [firstLayer setPosition:[self center]];
+    [firstLayer setPosition:CGPointMake(self.bounds.size.width / 2, self.bounds.size.height / 2)];
     
     // Give it a background color
     firstLayer.backgroundColor = [[UIColor whiteColor] CGColor];
@@ -65,7 +65,7 @@
     // Give it a size
     [secondLayer setBounds:CGRectMake(0.0, 0.0, cardWidth, cardHeight)];
     
-    [secondLayer setPosition:[self center]];
+    [secondLayer setPosition:CGPointMake(self.bounds.size.width / 2, self.bounds.size.height / 2)];
     secondLayer.backgroundColor = [[UIColor whiteColor] CGColor];
     [secondLayer setMasksToBounds:YES];
     
