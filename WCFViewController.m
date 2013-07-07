@@ -122,49 +122,60 @@
     CGFloat startValueFront, endValueFront, startValueBack, endValueBack;
     
     if ([firstLayerStatus isEqual:@"DOWN"] && [firstLabelShowing isEqual:@"COUNTRY"]) {
+        NSLog(@"Message 53: WCFViewController: ");
         front = [[self myView] secondLayer];
         back = [[self myView] firstLayer];
         startValueFront = 0.0f;
         endValueFront = M_PI;
         startValueBack = -M_PI;
         endValueBack = 0.0f;
-    } else {
+    } 
     
-        if (![[self myView] isFlipped]) {
-            front = [[self myView] firstLayer];
-            back = [[self myView] secondLayer];
-            startValueFront = 0.0f;
-            endValueFront = -M_PI;
-            startValueBack = M_PI;
-            endValueBack = 0.0f;
-        } else {
-            front = [[self myView] secondLayer];
-            back = [[self myView] firstLayer];
-            startValueFront = 0.0f;
-            endValueFront = M_PI;
-            startValueBack = -M_PI;
-            endValueBack = 0.0f;
-        }
+    if ([firstLayerStatus isEqual:@"UP"] && [firstLabelShowing isEqual:@"COUNTRY"]) {
+        NSLog(@"Message 54: WCFViewController: ");
+        front = [[self myView] firstLayer];
+        back = [[self myView] secondLayer];
+        startValueFront = 0.0f;
+        endValueFront = -M_PI;
+        startValueBack = M_PI;
+        endValueBack = 0.0f;
+    } 
+    
+    
         
-        if ([secondLayerStatus isEqual:@"UP"] && ![[self myView] isFlipped]) {
-            NSLog(@"Message 40: WCFViewController: ");
-            front = [[self myView] firstLayer];
-            back = [[self myView] secondLayer];
-            startValueFront = M_PI;;
-            endValueFront = 0.0;
-            startValueBack = 0.0;
-            endValueBack = -M_PI;        
-        }
+    if ([firstLayerStatus isEqual:@"DOWN"] && [firstLabelShowing isEqual:@"CAPITAL"]) {
+        NSLog(@"Message 40: WCFViewController: ");
+        front = [[self myView] firstLayer];
+        back = [[self myView] secondLayer];
+        startValueFront = M_PI;;
+        endValueFront = 0.0;
+        startValueBack = 0.0;
+        endValueBack = -M_PI;        
     }
     
 // keep this because I will need this setup at some time 
-//    if ([secondLayerStatus isEqual:@"UP"] && [[self myView] isFlipped]) {        
-//        front = [[self myView] secondLayer];  
-//        back = [[self myView] firstLayer];    
-//        startValueFront = -M_PI;  
-//        endValueFront = 0.0;
-//        startValueBack = 0.0;
-//        endValueBack = M_PI;        
+//
+    if ([firstLayerStatus isEqual:@"UP"] && [firstLabelShowing isEqual:@"CAPITAL"]) {
+        NSLog(@"Message 56: WCFViewController: ");
+        front = [[self myView] secondLayer];  
+        back = [[self myView] firstLayer];    
+        startValueFront = -M_PI;  
+        endValueFront = 0.0;
+        startValueBack = 0.0;
+        endValueBack = M_PI;        
+    }
+    
+//   MYSTERY SETUP NUMBER 2
+//   I don't know when I will need it, or if I will need it
+    // this did not work, got the flash
+//    if ([firstLayerStatus isEqual:@"UP"] && [firstLabelShowing isEqual:@"CAPITAL"]) {
+//        NSLog(@"Message 55: WCFViewController: ");
+//        front = [[self myView] secondLayer];
+//        back = [[self myView] firstLayer];
+//        startValueFront = 0.0f;
+//        endValueFront = M_PI;
+//        startValueBack = -M_PI;
+//        endValueBack = 0.0f;
 //    }
     
 	CAAnimation *frontAnimation = [self
