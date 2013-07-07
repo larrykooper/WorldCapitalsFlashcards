@@ -139,9 +139,7 @@
         endValueFront = -M_PI;
         startValueBack = M_PI;
         endValueBack = 0.0f;
-    } 
-    
-    
+    }    
         
     if ([firstLayerStatus isEqual:@"DOWN"] && [firstLabelShowing isEqual:@"CAPITAL"]) {
         NSLog(@"Message 40: WCFViewController: ");
@@ -153,8 +151,6 @@
         endValueBack = -M_PI;        
     }
     
-// keep this because I will need this setup at some time 
-//
     if ([firstLayerStatus isEqual:@"UP"] && [firstLabelShowing isEqual:@"CAPITAL"]) {
         NSLog(@"Message 56: WCFViewController: ");
         front = [[self myView] secondLayer];  
@@ -167,7 +163,7 @@
     
 //   MYSTERY SETUP 
 //   I don't know when I will need it, or if I will need it
-    // this did not work, got the flash
+//    Probably won't need it 
 //    if ([firstLayerStatus isEqual:@"UP"] && [firstLabelShowing isEqual:@"CAPITAL"]) {
 //        NSLog(@"Message 55: WCFViewController: ");
 //        front = [[self myView] secondLayer];
@@ -205,7 +201,6 @@
     [front addAnimation:frontAnimation forKey:@"flip"];
     [back addAnimation:backAnimation forKey:@"flip"];
     [CATransaction commit];
-
 }
 
 // Does the animation of making the card disappear
@@ -240,7 +235,6 @@
     [first addAnimation:firstAnimation forKey:@"swipe1"];
     [second addAnimation:secondAnimation forKey:@"swipe2"];
     [CATransaction commit];
-
 }
 
 
