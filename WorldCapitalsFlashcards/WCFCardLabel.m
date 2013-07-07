@@ -21,9 +21,8 @@
         [textLayer setFont:@"Helvetica"];
         [textLayer setFontSize:18];
         [textLayer setAnchorPoint:CGPointMake(0.0, 0.0)];
-        [textLayer setBounds:CGRectMake(0.0, 0.0, cardWidth, 140.0)];  // make the bounds width = the width of card
-        // to center the text
-        [textLayer setPosition:CGPointMake(10.0, 20.0)];  // In real life adjust it to center the text somehow
+        [textLayer setBounds:CGRectMake(0.0, 0.0, cardWidth, 140.0)];         
+        [textLayer setPosition:CGPointMake(0.0, 20.0)];
         [textLayer setString:text];
         [textLayer setAlignmentMode:kCAAlignmentCenter];
         [textLayer setForegroundColor:[[UIColor blackColor] CGColor]];
