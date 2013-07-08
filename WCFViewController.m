@@ -32,7 +32,18 @@
 
 - (void)beginNewGame
 {
-    [[self myView] initLayersToStartGame];    
+    [[WCFCountryStore sharedStore] setUpRemainingCards];
+    
+    UIView *v = [[self view] viewWithTag:[@"10" integerValue]];
+    if (v) {
+        v.hidden = YES;
+        [[self view] bringSubviewToFront:v];
+        [v removeFromSuperview];
+    }
+    [self refreshCountLabel];
+    
+    [[self myView] initLayersToStartGame];
+    NSLog(@"Message 71: WCFViewController: Current country is: %@", [currentCountry countryName]);
    
     [self setFirstLayerStatus:@"UP"];
     [self setSecondLayerStatus:@"DOWN"];
@@ -42,7 +53,8 @@
 
 - (void)viewDidLoad
 {
-    NSLog(@"Message 6: WCFViewController.m: viewDidLoad was called.");
+    NSLog(@"Message 6: WCFViewController: viewDidLoad was called.");
+    NSLog(@"Message 72: WCFViewController: Current country is: %@", [currentCountry countryName]);
     
     // Add instructions label
     
@@ -60,10 +72,7 @@
     // Add 'number of cards' label
     
     countLabel = [[UILabel alloc] initWithFrame:CGRectMake(60, 320, 300, 30)];
-    [self.view addSubview:countLabel];
-    
-    countLabel.text = [NSString stringWithFormat:@"%d cards remaining / %d cards total", [[WCFCountryStore sharedStore] numCardsRemaining],
-                       [[WCFCountryStore sharedStore] numCardsTotal]];
+    [self.view addSubview:countLabel];    
     
     countLabel.textColor = [UIColor blackColor];
     
@@ -71,6 +80,7 @@
     countLabel.backgroundColor = [UIColor clearColor];
     countLabel.font = [UIFont systemFontOfSize:12.0];
     countLabel.numberOfLines = 0;
+    [self refreshCountLabel]; 
 }
 
 - (CAAnimation *)flipAnimationWithDuration:(NSTimeInterval)aDuration
@@ -235,6 +245,7 @@
 - (void)animationDidStop:(CAAnimation *)animation finished:(BOOL)flag
 {
     NSLog(@"Message 3: WCFViewController: I am in animationDidStop");
+    NSLog(@"Message 73: WCFViewController: Current country is: %@", [currentCountry countryName]);
     
     if ([[animation valueForKey:@"animationType"] isEqual:@"swipeUpAnim"]) {
         NSLog(@"Message 24: WCFViewController: isEqual swipeUpAnim executing");
@@ -242,17 +253,7 @@
         // Actually remove the card from the pack
         [[WCFCountryStore sharedStore] removeCard:currentCountry];
         // Update label
-        
-        NSString *myFormat;
-        if ([[WCFCountryStore sharedStore] numCardsRemaining] == 1) {
-            NSLog(@"Message 23: WCFViewController: One more card");
-            myFormat = @"%d card remaining / %d cards total";
-        } else {
-            myFormat = @"%d cards remaining / %d cards total";
-        }
-        
-        countLabel.text = [NSString stringWithFormat:myFormat, [[WCFCountryStore sharedStore] numCardsRemaining],
-                           [[WCFCountryStore sharedStore] numCardsTotal]];
+        [self refreshCountLabel];        
     }
     
     if ([[animation valueForKey:@"animationType"] isEqual:@"swipeUpAnim"] ||
@@ -276,7 +277,21 @@
     
 	isTransitioning = NO;
 }
-             
+
+- (void)refreshCountLabel
+{    
+    NSString *myFormat;
+    if ([[WCFCountryStore sharedStore] numCardsRemaining] == 1) {
+        NSLog(@"Message 23: WCFViewController: One more card");
+        myFormat = @"%d card remaining / %d cards total";
+    } else {
+        myFormat = @"%d cards remaining / %d cards total";
+    }
+    
+    countLabel.text = [NSString stringWithFormat:myFormat, [[WCFCountryStore sharedStore] numCardsRemaining],
+                       [[WCFCountryStore sharedStore] numCardsTotal]];    
+}
+
 - (WCFView *)myView
 {
     return (WCFView *)[self view];
@@ -387,6 +402,7 @@
     NSLog(@"Message 23: WCFViewController: executing showNoMoreCards");
     CGRect nmcFrame = CGRectMake(30, 240, 300, 50);
     UIView *nmcView = [[UIView alloc] initWithFrame:nmcFrame];
+    [nmcView setTag:10];
     [self.view addSubview:nmcView];
     UILabel *nmcLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 20, 300, 50)];
    

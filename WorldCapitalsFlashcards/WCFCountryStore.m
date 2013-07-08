@@ -127,14 +127,24 @@
         capIndex++;
         [allCountries addObject:c];
     }
-    // Copy allCountries into remainingCards
-    remainingCards = [[NSMutableArray alloc] initWithArray:allCountries copyItems:YES];
+    [self setUpRemainingCards];
     
     return YES;    
 }
 
+- (void)setUpRemainingCards
+{
+    if (remainingCards) {
+        remainingCards = nil;
+    }
+    
+    // Copy allCountries into remainingCards
+    remainingCards = [[NSMutableArray alloc] initWithArray:allCountries copyItems:YES];
+}
+
 - (void)removeCard:(Country *)country
 {
+    NSLog(@"Message 19: WCFCountryStore: We are in remove card with country %@", [country countryName]);
     [remainingCards removeObjectIdenticalTo:country];
 }
 

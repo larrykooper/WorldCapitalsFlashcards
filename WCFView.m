@@ -125,15 +125,14 @@
         }        
     } else {
         // restart game
-        // LKHERE 
-        
-    }
-    
+        [myController beginNewGame];
+    }    
 }
 
 - (void)swipeUp:(UIGestureRecognizer *)gr
 {
     NSLog(@"Message 41: WCFView: swipeUp was called.");
+    NSLog(@"Message 74: WCFView: myController Current Country: %@", [[myController currentCountry] countryName]);
     [myController removeCard];
 }
 
@@ -146,6 +145,7 @@
 - (void)rotateMe
 {
     NSLog(@"WCFView: rotateMe was called.");
+    NSLog(@"Message 75: WCFView: myController Current Country: %@", [[myController currentCountry] countryName]);
     if (![[WCFCountryStore sharedStore] cardDeckEmpty]) {
         [firstLayer setPosition:CGPointMake(self.bounds.size.width / 2, self.bounds.size.height / 2)];
         [secondLayer setPosition:CGPointMake(self.bounds.size.width / 2, self.bounds.size.height / 2)];

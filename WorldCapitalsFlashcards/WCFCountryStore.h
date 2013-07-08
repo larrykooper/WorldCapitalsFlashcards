@@ -32,4 +32,6 @@
 
 - (BOOL)cardDeckEmpty;
 
+- (void)setUpRemainingCards;
+
 @end
