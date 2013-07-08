@@ -22,6 +22,7 @@
 @property (nonatomic, strong) WCFCardLabel *secondLabel;
 
 - (void)rotateMe;
-- (void)initLayers;
+- (void)initLayersToStartApp;
+- (void)initLayersToStartGame;
 
 @end

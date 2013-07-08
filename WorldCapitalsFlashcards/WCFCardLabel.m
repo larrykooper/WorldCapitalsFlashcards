@@ -13,7 +13,7 @@
 
 @synthesize textLayer;
 
-- (id)initWithText:(NSString *)text
+- (id)initWithConfig 
 {
     self = [super init];
     if (self) {
@@ -22,8 +22,7 @@
         [textLayer setFontSize:18];
         [textLayer setAnchorPoint:CGPointMake(0.0, 0.0)];
         [textLayer setBounds:CGRectMake(0.0, 0.0, cardWidth, 140.0)];         
-        [textLayer setPosition:CGPointMake(0.0, 20.0)];
-        [textLayer setString:text];
+        [textLayer setPosition:CGPointMake(0.0, 20.0)];        
         [textLayer setAlignmentMode:kCAAlignmentCenter];
         [textLayer setForegroundColor:[[UIColor blackColor] CGColor]];
         [textLayer setContentsScale:[[UIScreen mainScreen] scale]];        

@@ -24,9 +24,16 @@
 - (void)loadView
 {
     NSLog(@"Message 5: WCFViewController.m: loadView was called.");
-    [self setView:[[WCFView alloc] initWithFrame:[[UIScreen mainScreen] bounds]]];
-    [[self myView] setMyController:self];
-    [[self myView] initLayers];
+    [self setView:[[WCFView alloc] initWithFrame:[[UIScreen mainScreen] bounds]]];  
+    [[self myView] setMyController:self];   
+    [[self myView] initLayersToStartApp];
+    [self beginNewGame];
+}
+
+- (void)beginNewGame
+{
+    [[self myView] initLayersToStartGame];    
+   
     [self setFirstLayerStatus:@"UP"];
     [self setSecondLayerStatus:@"DOWN"];
     [self setFirstLabelShowing:@"COUNTRY"];
@@ -383,13 +390,14 @@
     [self.view addSubview:nmcView];
     UILabel *nmcLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 20, 300, 50)];
    
-    [nmcLabel setText:@"No more cards!"];
+    [nmcLabel setText:@"No more cards!\nTap to restart game"];
     [nmcLabel setTextColor:[UIColor blackColor]];
     
     [nmcLabel setTextAlignment: NSTextAlignmentCenter];  
     
     [nmcLabel setBackgroundColor:[UIColor clearColor]];
     [nmcLabel setFont:[UIFont systemFontOfSize:16.0]];
+    [nmcLabel setNumberOfLines:0];
        
     [nmcView addSubview:nmcLabel];    
 }

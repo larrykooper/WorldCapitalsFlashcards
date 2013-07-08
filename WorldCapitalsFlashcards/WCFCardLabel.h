@@ -13,7 +13,7 @@
 
 @property (nonatomic) CATextLayer *textLayer;
 
-- (id)initWithText:(NSString *)text;  
+- (id)initWithConfig;
 - (WCFCardLabel *)updateLabel:(NSString *)text;
 
 @end
