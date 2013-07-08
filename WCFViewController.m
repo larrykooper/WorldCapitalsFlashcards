@@ -54,11 +54,24 @@
 - (void)viewDidLoad
 {
     NSLog(@"Message 6: WCFViewController: viewDidLoad was called.");
-    NSLog(@"Message 72: WCFViewController: Current country is: %@", [currentCountry countryName]);
+    NSLog(@"Message 72: WCFViewController: Current country is: %@", [currentCountry countryName]);    
     
-    // Add instructions label
+    // Add 'number of cards' label
+    CGFloat yOfCountLabel = (([[self view] bounds].size.height) / 2) + (cardHeight / 2) + 15.0;
+    countLabel = [[UILabel alloc] initWithFrame:CGRectMake(60, yOfCountLabel, 300, 30)];  // this is problem area
+    [self.view addSubview:countLabel];
     
-    UILabel *instrsLabel = [[UILabel alloc] initWithFrame:CGRectMake(60, 340, 300, 30)];
+    countLabel.textColor = [UIColor blackColor];
+    
+    countLabel.textAlignment = NSTextAlignmentLeft;
+    countLabel.backgroundColor = [UIColor clearColor];
+    countLabel.font = [UIFont systemFontOfSize:12.0];
+    countLabel.numberOfLines = 0;
+    [self refreshCountLabel];
+    
+    // Add instructions label    
+    CGFloat yOfInstrsLabel = yOfCountLabel + 30.0;
+    UILabel *instrsLabel = [[UILabel alloc] initWithFrame:CGRectMake(60, yOfInstrsLabel, 300, 30)];  // this is problem area
     [self.view addSubview:instrsLabel];
     
     instrsLabel.text = @"Swipe up: remove card\nSwipe left: try card again later";
@@ -67,20 +80,7 @@
     instrsLabel.textAlignment = NSTextAlignmentLeft;
     instrsLabel.backgroundColor = [UIColor clearColor];
     instrsLabel.font = [UIFont systemFontOfSize:12.0];
-    instrsLabel.numberOfLines = 0;
-    
-    // Add 'number of cards' label
-    
-    countLabel = [[UILabel alloc] initWithFrame:CGRectMake(60, 320, 300, 30)];
-    [self.view addSubview:countLabel];    
-    
-    countLabel.textColor = [UIColor blackColor];
-    
-    countLabel.textAlignment = NSTextAlignmentLeft;
-    countLabel.backgroundColor = [UIColor clearColor];
-    countLabel.font = [UIFont systemFontOfSize:12.0];
-    countLabel.numberOfLines = 0;
-    [self refreshCountLabel]; 
+    instrsLabel.numberOfLines = 0;    
 }
 
 - (CAAnimation *)flipAnimationWithDuration:(NSTimeInterval)aDuration
