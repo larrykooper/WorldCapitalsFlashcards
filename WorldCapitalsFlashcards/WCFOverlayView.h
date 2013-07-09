@@ -9,6 +9,9 @@
 
 #import <Foundation/Foundation.h>
 
-@interface WCFOverlayView : UIView 
+@interface WCFOverlayView : UIView
+{
+    CGFloat circleCenterX, circleCenterY, circleRadius, sizeOfCross;
+}
 
 @end

@@ -30,7 +30,12 @@
     // Add the circle to close the window    
     // Fill is still black
     
-    CGContextAddArc(ctx, 200, 20, 16.0, 0.0, M_PI * 2.0, YES);
+    circleCenterX = 200.0;
+    circleCenterY = 20.0;
+    circleRadius = 16.0;
+    sizeOfCross = 6.0;    
+    
+    CGContextAddArc(ctx, circleCenterX, circleCenterY, circleRadius, 0.0, M_PI * 2.0, YES);
     CGContextFillPath(ctx);
     
     // Add the x to show the user where to tap
@@ -38,14 +43,14 @@
     CGContextSetStrokeColorWithColor(ctx,[[UIColor whiteColor] CGColor]);
     CGContextSetLineWidth(ctx, 2.0);
     
-    CGContextMoveToPoint(ctx, 194, 14);
+    CGContextMoveToPoint(ctx, circleCenterX - sizeOfCross, circleCenterY - sizeOfCross);
     
-    CGContextAddLineToPoint(ctx, 206, 26);
+    CGContextAddLineToPoint(ctx, circleCenterX + sizeOfCross, circleCenterY + sizeOfCross);
     // Draw the path
     CGContextStrokePath(ctx);
     
-    CGContextMoveToPoint(ctx, 206, 14);
-    CGContextAddLineToPoint(ctx, 194, 26);
+    CGContextMoveToPoint(ctx, circleCenterX + sizeOfCross, circleCenterY - sizeOfCross);
+    CGContextAddLineToPoint(ctx, circleCenterX - sizeOfCross, circleCenterY + sizeOfCross);
     // Draw the path
     CGContextStrokePath(ctx);
     
@@ -61,6 +66,32 @@
     instrsLabel.backgroundColor = [UIColor clearColor];  
     instrsLabel.font = [UIFont systemFontOfSize:14.0];
     instrsLabel.numberOfLines = 0;
+    [self addTapRecognizer];
+}
+
+- (void)addTapRecognizer
+{
+    UITapGestureRecognizer *tapRecognizer =
+    [[UITapGestureRecognizer alloc] initWithTarget:self
+                                            action:@selector(tap:)];
+    [self addGestureRecognizer:tapRecognizer];    
+}
+
+- (void)tap:(UIGestureRecognizer *)gr
+{
+    NSLog(@"Message 17: WCFOverlayView: I am in tap handler");
+        
+    CGPoint myPoint = [gr locationInView:self];
+    
+    CGFloat targetTopY = circleCenterY - circleRadius;
+    CGFloat targetBottomY = circleCenterY + circleRadius;
+    CGFloat targetLeftX = circleCenterX - circleRadius;
+    CGFloat targetRightX = circleCenterX + circleRadius;    
+    
+    if (myPoint.y > targetTopY && myPoint.y < targetBottomY && myPoint.x > targetLeftX && myPoint.x < targetRightX) {
+        [self setHidden:YES];
+       // let me do this first and later animate its removal 
+    }    
 }
 
 @end

@@ -38,7 +38,6 @@
     
     WCFOverlayView *ovlyView = [[WCFOverlayView alloc] initWithFrame:viewFrame];
     [ovlyView setBackgroundColor:[UIColor clearColor]];
-    //[ovlyView setAlpha:0.5];
     [[self view] addSubview:ovlyView];
 }
 
