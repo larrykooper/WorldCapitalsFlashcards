@@ -28,6 +28,7 @@
 }
 
 - (void)initLayersToStartApp {
+    // Next line is the (sort of) forest green 
     [self setBackgroundColor:[UIColor colorWithRed:0.424f green:0.506f blue:0.353f alpha:1.00f]];
     
     // Create a CALayer object

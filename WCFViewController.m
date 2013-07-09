@@ -15,6 +15,7 @@
 #import "WCFConstants.h"
 #import "WCFCountryStore.h"
 #import "Country.h"
+#import "WCFOverlayView.h"
 
 @implementation WCFViewController
 @synthesize currentCountry, countLabel;
@@ -23,11 +24,22 @@
 
 - (void)loadView
 {
-    NSLog(@"Message 5: WCFViewController.m: loadView was called.");
+    NSLog(@"Message 5: WCFViewController: loadView was called.");
     [self setView:[[WCFView alloc] initWithFrame:[[UIScreen mainScreen] bounds]]];  
     [[self myView] setMyController:self];   
     [[self myView] initLayersToStartApp];
+    [self createInstrsOverlay];
     [self beginNewGame];
+}
+
+- (void)createInstrsOverlay
+{    
+    CGRect viewFrame = CGRectMake(0, 29, 230, 100);
+    
+    WCFOverlayView *ovlyView = [[WCFOverlayView alloc] initWithFrame:viewFrame];
+    [ovlyView setBackgroundColor:[UIColor clearColor]];
+    //[ovlyView setAlpha:0.5];
+    [[self view] addSubview:ovlyView];
 }
 
 - (void)beginNewGame
@@ -58,29 +70,17 @@
     
     // Add 'number of cards' label
     CGFloat yOfCountLabel = (([[self view] bounds].size.height) / 2) + (cardHeight / 2) + 15.0;
-    countLabel = [[UILabel alloc] initWithFrame:CGRectMake(60, yOfCountLabel, 300, 30)];  // this is problem area
+    countLabel = [[UILabel alloc] initWithFrame:CGRectMake(34, yOfCountLabel, cardWidth, 30)];
     [self.view addSubview:countLabel];
     
     countLabel.textColor = [UIColor blackColor];
     
-    countLabel.textAlignment = NSTextAlignmentLeft;
-    countLabel.backgroundColor = [UIColor clearColor];
-    countLabel.font = [UIFont systemFontOfSize:12.0];
+    countLabel.textAlignment = NSTextAlignmentCenter;
+    countLabel.backgroundColor = [UIColor whiteColor];
+    countLabel.font = [UIFont systemFontOfSize:14.0];
     countLabel.numberOfLines = 0;
     [self refreshCountLabel];
     
-    // Add instructions label    
-    CGFloat yOfInstrsLabel = yOfCountLabel + 30.0;
-    UILabel *instrsLabel = [[UILabel alloc] initWithFrame:CGRectMake(60, yOfInstrsLabel, 300, 30)];  // this is problem area
-    [self.view addSubview:instrsLabel];
-    
-    instrsLabel.text = @"Swipe up: remove card\nSwipe left: try card again later";
-    instrsLabel.textColor = [UIColor blackColor];
-    
-    instrsLabel.textAlignment = NSTextAlignmentLeft;
-    instrsLabel.backgroundColor = [UIColor clearColor];
-    instrsLabel.font = [UIFont systemFontOfSize:12.0];
-    instrsLabel.numberOfLines = 0;    
 }
 
 - (CAAnimation *)flipAnimationWithDuration:(NSTimeInterval)aDuration
