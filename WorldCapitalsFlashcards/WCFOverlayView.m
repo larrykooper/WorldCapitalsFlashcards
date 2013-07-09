@@ -27,12 +27,27 @@
     [maskPath fillWithBlendMode:kCGBlendModeNormal
                            alpha:0.4];
     
-    // Add the x to close the window
-    
+    // Add the circle to close the window    
     // Fill is still black
     
-    CGContextAddArc(ctx, 200, 20, 12.0, 0.0, M_PI * 2.0, YES);
+    CGContextAddArc(ctx, 200, 20, 16.0, 0.0, M_PI * 2.0, YES);
     CGContextFillPath(ctx);
+    
+    // Add the x to show the user where to tap
+    
+    CGContextSetStrokeColorWithColor(ctx,[[UIColor whiteColor] CGColor]);
+    CGContextSetLineWidth(ctx, 2.0);
+    
+    CGContextMoveToPoint(ctx, 194, 14);
+    
+    CGContextAddLineToPoint(ctx, 206, 26);
+    // Draw the path
+    CGContextStrokePath(ctx);
+    
+    CGContextMoveToPoint(ctx, 206, 14);
+    CGContextAddLineToPoint(ctx, 194, 26);
+    // Draw the path
+    CGContextStrokePath(ctx);
     
     // Add the instructions label
     
