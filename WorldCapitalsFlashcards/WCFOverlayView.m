@@ -12,7 +12,9 @@
 
 - (void)drawRect:(CGRect)rect
 {
-    NSLog(@"Message 18: WCFOverlayView: in drawRect");    
+    NSLog(@"Message 18: WCFOverlayView: in drawRect");
+    CGContextRef ctx = UIGraphicsGetCurrentContext();
+    
     // Create the path
     UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 0, 230, 100)
                                                    byRoundingCorners:UIRectCornerTopRight | UIRectCornerBottomRight
@@ -24,8 +26,15 @@
     
     [maskPath fillWithBlendMode:kCGBlendModeNormal
                            alpha:0.4];
-       
-    // Add instructions label
+    
+    // Add the x to close the window
+    
+    // Fill is still black
+    
+    CGContextAddArc(ctx, 200, 20, 12.0, 0.0, M_PI * 2.0, YES);
+    CGContextFillPath(ctx);
+    
+    // Add the instructions label
     
     UILabel *instrsLabel = [[UILabel alloc] initWithFrame:CGRectMake(30, 26, 200, 45)];
     [self addSubview:instrsLabel];
