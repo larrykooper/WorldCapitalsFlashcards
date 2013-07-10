@@ -27,5 +27,6 @@
 - (void)tryCardAgainLater;
 - (void)getRidOfCardToRight;
 - (void)beginNewGame;
+- (BOOL)gameIsOver;
 
 @end

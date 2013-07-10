@@ -124,7 +124,7 @@
 {
     NSLog(@"Message 1: WCFView: I am in tap handler");
     
-    if (![[WCFCountryStore sharedStore] cardDeckEmpty]) {
+    if (![myController gameIsOver]) {
         CGPoint myPoint = [gr locationInView:self];
         CGFloat cardTopY = ((self.bounds.size.height / 2.0) - cardHeight / 2.0);
         CGFloat cardBottomY = cardTopY + cardHeight;

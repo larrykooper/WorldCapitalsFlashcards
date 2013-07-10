@@ -450,8 +450,7 @@
 
 - (void)showNextCard
 {
-    if ([[WCFCountryStore sharedStore] cardDeckEmpty] && [[WCFCountryStore sharedStore] numCardsStashed] == 0) {
-        NSLog(@"Message 22: WCFViewController: Card Deck is empty");
+    if ([self gameIsOver]) {        
         [self showNoMoreCards];
         return;
     }
@@ -531,6 +530,11 @@
     [nmcLabel setNumberOfLines:0];
        
     [nmcView addSubview:nmcLabel];    
+}
+
+- (BOOL)gameIsOver
+{
+    return ([[WCFCountryStore sharedStore] cardDeckEmpty] && [[WCFCountryStore sharedStore] numCardsStashed] == 0);
 }
 
 @end
