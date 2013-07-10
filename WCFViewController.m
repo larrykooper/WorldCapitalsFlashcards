@@ -33,8 +33,8 @@
 }
 
 - (void)createInstrsOverlay
-{    
-    CGRect viewFrame = CGRectMake(0, 29, 230, 100);
+{
+    CGRect viewFrame = CGRectMake(0, 14.5, 290, 150);
     
     WCFOverlayView *ovlyView = [[WCFOverlayView alloc] initWithFrame:viewFrame];
     [ovlyView setBackgroundColor:[UIColor clearColor]];

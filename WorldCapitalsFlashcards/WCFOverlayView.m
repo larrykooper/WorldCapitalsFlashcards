@@ -16,7 +16,7 @@
     CGContextRef ctx = UIGraphicsGetCurrentContext();
     
     // Create the path
-    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 0, 230, 100)
+    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 0, 290, 150)
                                                    byRoundingCorners:UIRectCornerTopRight | UIRectCornerBottomRight
                                                          cornerRadii:CGSizeMake(30.0, 30.0)];
     // Set the render color
@@ -30,7 +30,7 @@
     // Add the circle to close the window    
     // Fill is still black
     
-    circleCenterX = 200.0;
+    circleCenterX = 255.0;
     circleCenterY = 20.0;
     circleRadius = 16.0;
     sizeOfCross = 6.0;    
@@ -56,10 +56,10 @@
     
     // Add the instructions label
     
-    UILabel *instrsLabel = [[UILabel alloc] initWithFrame:CGRectMake(30, 26, 200, 45)];
+    UILabel *instrsLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 16, 230, 100)];
     [self addSubview:instrsLabel];
     
-    instrsLabel.text = @"Swipe up: remove card\nSwipe left: try card again later";
+    instrsLabel.text = @"Tap card to flip card over.\nIf you are right, swipe UP: remove card\nIf you are wrong, swipe LEFT: try card again later";
     instrsLabel.textColor = [UIColor whiteColor];
     
     instrsLabel.textAlignment = NSTextAlignmentLeft;
