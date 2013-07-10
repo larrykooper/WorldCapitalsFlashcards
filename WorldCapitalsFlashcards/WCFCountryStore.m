@@ -213,6 +213,9 @@
 
 - (Country *)popStash
 {
+    if (stashCount == 0) {
+        return nil;
+    }
     Country *c = [stash objectAtIndex:(stashCount - 1)];
     [stash removeLastObject];
     stashCount--;

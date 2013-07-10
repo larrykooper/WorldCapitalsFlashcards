@@ -34,7 +34,7 @@
 
 - (void)createInstrsOverlay
 {
-    CGRect viewFrame = CGRectMake(0, 14.5, 290, 150);
+    CGRect viewFrame = CGRectMake(0, 14.5, 290, 176);
     
     WCFOverlayView *ovlyView = [[WCFOverlayView alloc] initWithFrame:viewFrame];
     [ovlyView setBackgroundColor:[UIColor clearColor]];
@@ -409,6 +409,11 @@
 - (void)getRidOfCardToRight
 {
     if (isTransitioning) {
+        return;
+    }
+    
+    // Can't go to right if nothing is stashed 
+    if ([[WCFCountryStore sharedStore] numCardsStashed] == 0) {
         return;
     }
     

@@ -32,7 +32,7 @@
     
     circleCenterX = 255.0;
     circleCenterY = 20.0;
-    circleRadius = 16.0;
+    circleRadius = 22.0;
     sizeOfCross = 6.0;    
     
     CGContextAddArc(ctx, circleCenterX, circleCenterY, circleRadius, 0.0, M_PI * 2.0, YES);
@@ -56,10 +56,10 @@
     
     // Add the instructions label
     
-    UILabel *instrsLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 16, 230, 100)];
+    UILabel *instrsLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 16, 255, 120)];
     [self addSubview:instrsLabel];
     
-    instrsLabel.text = @"Tap card to flip card over.\nIf you are right, swipe UP: remove card.\nIf you are wrong, swipe LEFT: try card again later.";
+    instrsLabel.text = @"Tap card to flip card over.\nIf you got card right, swipe UP to remove card.\nIf you got card wrong, swipe LEFT to stash card.\nSwipe RIGHT to get cards from stash.";
     instrsLabel.textColor = [UIColor whiteColor];
     
     instrsLabel.textAlignment = NSTextAlignmentLeft;
