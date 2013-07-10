@@ -11,6 +11,8 @@
 
 @implementation WCFCountryStore
 
+@synthesize removedCardsCount;
+
 // Will initialize the store with all countries
 + (WCFCountryStore *)sharedStore
 {
@@ -156,6 +158,12 @@
 {
     NSLog(@"Message 19: WCFCountryStore: We are in remove card with country %@", [country countryName]);
     [remainingCards removeObjectIdenticalTo:country];
+    removedCardsCount++;
+}
+
+- (void)takeCardOutOfPack:country
+{
+    [remainingCards removeObjectIdenticalTo:country];
 }
 
 - (void)addCardToStash:(Country *)country
@@ -163,8 +171,13 @@
     [stash addObject:country];
     // add one to the shashCount
     stashCount++;    
-    // We remove the card because it is now not eligible for random selection
-    [self removeCard:country];
+    // We take the card out of the pack because it is now not eligible for random selection
+    [self takeCardOutOfPack:country];
+}
+
+- (void)addCardToDeck:(Country *)country
+{
+    [remainingCards addObject:country];
 }
 
 - (Country *)getRandomCardFromRemaining
@@ -181,6 +194,11 @@
 - (NSInteger)numCardsStashed
 {
     return stashCount;
+}
+
+- (NSInteger)numCardsRemoved
+{
+    return removedCardsCount;
 }
 
 - (NSInteger)numCardsTotal

@@ -21,6 +21,8 @@
     NSInteger stashCount;
 }
 
+@property NSInteger removedCardsCount;
+
 + (WCFCountryStore *)sharedStore;
 
 - (NSArray *)allCountries;
@@ -31,11 +33,15 @@
 
 - (void)addCardToStash:(Country *)country;
 
+- (void)addCardToDeck:(Country *)country;
+
 - (Country *)getRandomCardFromRemaining;
 
 - (NSInteger)numCardsRemaining;
 
 - (NSInteger)numCardsStashed;
+
+- (NSInteger)numCardsRemoved;
 
 - (NSInteger)numCardsTotal;
 

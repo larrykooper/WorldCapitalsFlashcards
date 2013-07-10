@@ -45,6 +45,7 @@
 {
     [[WCFCountryStore sharedStore] setUpRemainingCards];
     [[WCFCountryStore sharedStore] setUpStash];
+    [[WCFCountryStore sharedStore] setRemovedCardsCount:0];
     
     UIView *v = [[self view] viewWithTag:[@"10" integerValue]];
     if (v) {
@@ -71,14 +72,14 @@
     // Add 'number of cards' label
     
     CGFloat yOfCountView = (([[self view] bounds].size.height) / 2) + (cardHeight / 2) + 15.0;
-    CGRect viewFrame = CGRectMake(35, yOfCountView, cardWidth, 70);
+    CGRect viewFrame = CGRectMake(35, yOfCountView, cardWidth, 85);
     
     UIView *countView = [[UIView alloc] initWithFrame:viewFrame];
     [countView setBackgroundColor:[UIColor whiteColor]];
     [self.view addSubview:countView];
     
     CGFloat leftMargin = 50.0;
-    countLabel = [[UILabel alloc] initWithFrame:CGRectMake(leftMargin, 5, cardWidth - leftMargin, 60)];
+    countLabel = [[UILabel alloc] initWithFrame:CGRectMake(leftMargin, 5, cardWidth - leftMargin, 72)];
     
     countLabel.textColor = [UIColor blackColor];
     
@@ -269,9 +270,12 @@
         [self showNextCard];
     }
     
-    if ([[animation valueForKey:@"animationType"] isEqual:@"swipeRightAnim"]) {
+    if ([[animation valueForKey:@"animationType"] isEqual:@"swipeRightAnim"]) {        
+        // Add it to deck
+        [[WCFCountryStore sharedStore] addCardToDeck:currentCountry];
         [self getCardFromStash];
-    }
+        [self refreshCountLabel];
+    }    
 
     if ([[animation valueForKey:@"animationType"] isEqual:@"flipAnim"]) {
         NSLog(@"Message 4: WCFViewController: We are in flipStop");
@@ -343,13 +347,14 @@
     NSString *myFormat;
     if ([[WCFCountryStore sharedStore] numCardsRemaining] == 1) {
         NSLog(@"Message 23: WCFViewController: One more card");
-        myFormat = @"%d card in deck\n%d cards stashed\n%d cards total";
+        myFormat = @"%d card in deck\n%d cards stashed\n%d cards removed\n%d cards total";
     } else {
-        myFormat = @"%d cards in deck\n%d cards stashed\n%d cards total";
+        myFormat = @"%d cards in deck\n%d cards stashed\n%d cards removed\n%d cards total";
     }
     
     countLabel.text = [NSString stringWithFormat:myFormat, [[WCFCountryStore sharedStore] numCardsRemaining],
                        [[WCFCountryStore sharedStore] numCardsStashed],
+                       [[WCFCountryStore sharedStore] numCardsRemoved],
                        [[WCFCountryStore sharedStore] numCardsTotal]];    
 }
 
