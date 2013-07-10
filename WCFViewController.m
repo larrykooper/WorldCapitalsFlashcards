@@ -345,18 +345,19 @@
 - (void)refreshCountLabel
 {    
     NSString *myFormat;
-    if ([[WCFCountryStore sharedStore] numCardsRemaining] == 1) {
-        NSLog(@"Message 23: WCFViewController: One more card");
-        myFormat = @"%d card in deck\n%d cards stashed\n%d cards removed\n%d cards total";
-    } else {
-        myFormat = @"%d cards in deck\n%d cards stashed\n%d cards removed\n%d cards total";
-    }
-    
-    countLabel.text = [NSString stringWithFormat:myFormat, [[WCFCountryStore sharedStore] numCardsRemaining],
-                       [[WCFCountryStore sharedStore] numCardsStashed],
-                       [[WCFCountryStore sharedStore] numCardsRemoved],
-                       [[WCFCountryStore sharedStore] numCardsTotal]];    
+    NSInteger remaining = [[WCFCountryStore sharedStore] numCardsRemaining];
+    NSInteger stashed = [[WCFCountryStore sharedStore] numCardsStashed];
+    NSInteger removed = [[WCFCountryStore sharedStore] numCardsRemoved];
+    NSInteger total =  [[WCFCountryStore sharedStore] numCardsTotal];
+    myFormat = @"%d %@ in deck\n%d %@ stashed\n%d %@ removed\n%d cards total";
+    [countLabel setText:[NSString stringWithFormat:myFormat, remaining, [self noun:remaining], stashed, [self noun:stashed], removed, [self noun:removed], total]];                       
 }
+
+- (NSString *)noun:(NSInteger)count
+{
+    return (count == 1) ? @"card" : @"cards";
+}
+
 
 - (WCFView *)myView
 {
