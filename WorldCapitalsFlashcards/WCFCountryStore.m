@@ -11,7 +11,7 @@
 
 @implementation WCFCountryStore
 
-// Will initialize the store with all countries 
+// Will initialize the store with all countries
 + (WCFCountryStore *)sharedStore
 {
     static WCFCountryStore *sharedStore = nil;
@@ -143,6 +143,15 @@
     remainingCards = [[NSMutableArray alloc] initWithArray:allCountries copyItems:YES];
 }
 
+- (void)setUpStash
+{
+    if (stash) {
+        stash = nil;
+    }
+    
+    stash = [[NSMutableArray alloc] init];
+}
+
 - (void)removeCard:(Country *)country
 {
     NSLog(@"Message 19: WCFCountryStore: We are in remove card with country %@", [country countryName]);
@@ -174,7 +183,7 @@
     return stashCount;
 }
 
-- (NSInteger)numCardsTotal;
+- (NSInteger)numCardsTotal
 {
     return [allCountries count];
 }
@@ -182,6 +191,14 @@
 - (BOOL)cardDeckEmpty
 {
     return ([self numCardsRemaining] == 0);
+}
+
+- (Country *)popStash
+{
+    Country *c = [stash objectAtIndex:(stashCount - 1)];
+    [stash removeLastObject];
+    stashCount--;
+    return c;
 }
 
 @end

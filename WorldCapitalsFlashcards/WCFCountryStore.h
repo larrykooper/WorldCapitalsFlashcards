@@ -43,4 +43,8 @@
 
 - (void)setUpRemainingCards;
 
+- (void)setUpStash;
+
+- (Country *)popStash;
+
 @end

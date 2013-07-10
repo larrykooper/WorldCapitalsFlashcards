@@ -70,12 +70,13 @@
     [[self layer] addSublayer:secondLayer];
     [[self layer] addSublayer:firstLayer];
     
+    // Add tap recognizer
     UITapGestureRecognizer *tapRecognizer =
     [[UITapGestureRecognizer alloc] initWithTarget:self
                                             action:@selector(tap:)];
     [self addGestureRecognizer:tapRecognizer];
     
-    // OTHER GESTURE RECOGNIZERS
+    // Add swipe up recognizer
     UISwipeGestureRecognizer *swipeRecognizer =
     [[UISwipeGestureRecognizer alloc] initWithTarget:self
                                               action:@selector(swipeUp:)];
@@ -84,12 +85,21 @@
     
     [self addGestureRecognizer:swipeRecognizer];
     
+    // Add swipe left recognizer
     UISwipeGestureRecognizer *swipeLeftRecognizer =
     [[UISwipeGestureRecognizer alloc] initWithTarget:self
                                               action:@selector(swipeLeft:)];
     
     [swipeLeftRecognizer setDirection:UISwipeGestureRecognizerDirectionLeft];
     [self addGestureRecognizer:swipeLeftRecognizer];
+    
+    // Add swipe right recognizer
+    UISwipeGestureRecognizer *swipeRightRecognizer =
+    [[UISwipeGestureRecognizer alloc] initWithTarget:self
+                                              action:@selector(swipeRight:)];
+    
+    [swipeRightRecognizer setDirection:UISwipeGestureRecognizerDirectionRight];
+    [self addGestureRecognizer:swipeRightRecognizer];       
 }
 
 - (void)initLayersToStartGame {
@@ -139,8 +149,14 @@
 
 - (void)swipeLeft:(UIGestureRecognizer *)gr
 {
-    NSLog(@"swipeLeft was called.");
+    NSLog(@"WCFView: swipeLeft was called.");
     [myController tryCardAgainLater];
+}
+
+- (void)swipeRight:(UIGestureRecognizer *)gr
+{
+    NSLog(@"WCFView: swipeRight was called.");
+    [myController getRidOfCardToRight];
 }
 
 - (void)rotateMe

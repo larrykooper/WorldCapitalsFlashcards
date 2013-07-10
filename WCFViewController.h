@@ -25,6 +25,7 @@
 - (void)flip;
 - (void)removeCard;
 - (void)tryCardAgainLater;
+- (void)getRidOfCardToRight;
 - (void)beginNewGame;
 
 @end

@@ -44,6 +44,7 @@
 - (void)beginNewGame
 {
     [[WCFCountryStore sharedStore] setUpRemainingCards];
+    [[WCFCountryStore sharedStore] setUpStash];
     
     UIView *v = [[self view] viewWithTag:[@"10" integerValue]];
     if (v) {
@@ -70,7 +71,7 @@
     // Add 'number of cards' label
     
     CGFloat yOfCountView = (([[self view] bounds].size.height) / 2) + (cardHeight / 2) + 15.0;
-    CGRect viewFrame = CGRectMake(34, yOfCountView, cardWidth, 70);
+    CGRect viewFrame = CGRectMake(35, yOfCountView, cardWidth, 70);
     
     UIView *countView = [[UIView alloc] initWithFrame:viewFrame];
     [countView setBackgroundColor:[UIColor whiteColor]];
@@ -189,12 +190,10 @@
                                                 startValue:startValueFront
                                                   endValue:endValueFront];
     
-    
     CAAnimation *backAnimation = [self
                                     flipAnimationWithDuration:0.75f
                                                    startValue:startValueBack
-                                                     endValue:endValueBack];
-    
+                                                     endValue:endValueBack];    
     CGFloat zDistance = 1500.0f;
     
     // Create CATransform3D data structure
@@ -269,6 +268,10 @@
         [[animation valueForKey:@"animationType"] isEqual:@"swipeLeftAnim"]) {
         [self showNextCard];
     }
+    
+    if ([[animation valueForKey:@"animationType"] isEqual:@"swipeRightAnim"]) {
+        [self getCardFromStash];
+    }
 
     if ([[animation valueForKey:@"animationType"] isEqual:@"flipAnim"]) {
         NSLog(@"Message 4: WCFViewController: We are in flipStop");
@@ -282,6 +285,57 @@
         }
     }    
 	isTransitioning = NO;
+}
+
+- (void)getCardFromStash
+{
+    NSLog(@"Message 33: WCFViewController: I am executing getCardFromStash");
+    WCFView *theView = [self myView];
+    
+    // Get the card
+    Country *c = [[WCFCountryStore sharedStore] popStash];
+    [self setCurrentCountry:c];
+     NSLog(@"Message 14: WCFViewController: Current country is: %@", [currentCountry countryName]); 
+    
+    if ([secondLayerStatus isEqual:@"UP"]) {
+        [[theView firstLabel] updateLabel:[c capital]];
+        [[theView secondLabel] updateLabel:[c countryName]];
+        
+        [self setFirstLabelShowing:@"CAPITAL"];
+        [self setSecondLabelShowing:@"COUNTRY"];
+        
+    } else {
+        [[theView firstLabel] updateLabel:[c countryName]];
+        [[theView secondLabel] updateLabel:[c capital]];
+        
+        [self setFirstLabelShowing:@"COUNTRY"];
+        [self setSecondLabelShowing:@"CAPITAL"];
+    }
+    // Animate moving the card in from the left (from left to right)
+    CALayer *first = [theView firstLayer];
+    CALayer *second = [theView secondLayer];
+    CGPoint endPoint = CGPointMake(theView.bounds.size.width / 2, theView.bounds.size.height / 2);
+ 
+    NSLog(@"Message 15: WCFViewController: endPoint: x: %f y: %f", endPoint.x, endPoint.y);
+    
+    CGFloat startPointX =  0.0 - (cardWidth / 2);
+    
+    CGPoint startPoint = CGPointMake(startPointX, endPoint.y);
+    
+    CAAnimation *firstAnimation = [self swipeAnimationWithDuration:0.3f
+                                                          startPoint:startPoint
+                                                            endPoint:endPoint];
+    
+    CAAnimation *secondAnimation = [self swipeAnimationWithDuration:0.3f
+                                                          startPoint:startPoint
+                                                            endPoint:endPoint];
+    [firstAnimation setDelegate:self];
+    [first setPosition:endPoint];
+    [second setPosition:endPoint];
+    [CATransaction begin];
+    [first addAnimation:firstAnimation forKey:@"stashcard1"];
+    [second addAnimation:secondAnimation forKey:@"stashcard2"];
+    [CATransaction commit];
 }
 
 - (void)refreshCountLabel
@@ -314,7 +368,7 @@
 
 - (void)tryCardAgainLater
 {
-    NSLog(@"tryCardAgainLater was called.");
+    NSLog(@"Message 34: WCFViewController: tryCardAgainLater was called.");
     if (isTransitioning) {
         return;
     }
@@ -345,6 +399,42 @@
     [first addAnimation:firstAnimation forKey:@"swipe1"];
     [second addAnimation:secondAnimation forKey:@"swipe2"];
     [CATransaction commit];        
+}
+
+- (void)getRidOfCardToRight
+{
+    if (isTransitioning) {
+        return;
+    }
+    
+    // Animate the card leaving to the right
+    CALayer *first = [[self myView] firstLayer];
+    CALayer *second = [[self myView] secondLayer];
+    WCFView *theView = [self myView];    
+    
+    CGFloat endPointX = theView.bounds.size.width + (cardWidth * 0.75);
+    
+    CGPoint startPoint = CGPointMake([first position].x, [first position].y);
+    CGPoint endPoint = CGPointMake(endPointX, [first position].y);
+    
+    CAAnimation *firstAnimation = [self swipeAnimationWithDuration:0.3f
+                                                        startPoint:startPoint
+                                                          endPoint:endPoint];
+    
+    CAAnimation *secondAnimation = [self swipeAnimationWithDuration:0.3f
+                                                         startPoint:startPoint
+                                                           endPoint:endPoint];
+    
+    [firstAnimation setDelegate:self];
+    [first setPosition:endPoint];
+    [second setPosition:endPoint];
+    [firstAnimation setValue:@"swipeRightAnim" forKeyPath:@"animationType"];
+    
+    [CATransaction begin];
+    [first addAnimation:firstAnimation forKey:@"swipe1"];
+    [second addAnimation:secondAnimation forKey:@"swipe2"];
+    [CATransaction commit];
+    
 }
 
 - (void)showNextCard
