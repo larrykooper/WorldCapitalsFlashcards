@@ -449,11 +449,18 @@
 
 - (void)showNextCard
 {
-    if ([[WCFCountryStore sharedStore] cardDeckEmpty]) {
+    if ([[WCFCountryStore sharedStore] cardDeckEmpty] && [[WCFCountryStore sharedStore] numCardsStashed] == 0) {
         NSLog(@"Message 22: WCFViewController: Card Deck is empty");
         [self showNoMoreCards];
         return;
     }
+    
+    if ([[WCFCountryStore sharedStore] cardDeckEmpty] && [[WCFCountryStore sharedStore] numCardsStashed] > 0) {
+        [self getCardFromStash];
+        [self refreshCountLabel];
+        return;
+    }    
+    
     NSLog(@"Message 42: WCFViewController: showNextCard executing.");    
     
     WCFView *theView = [self myView];
