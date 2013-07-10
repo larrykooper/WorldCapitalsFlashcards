@@ -68,18 +68,25 @@
     NSLog(@"Message 72: WCFViewController: Current country is: %@", [currentCountry countryName]);    
     
     // Add 'number of cards' label
-    CGFloat yOfCountLabel = (([[self view] bounds].size.height) / 2) + (cardHeight / 2) + 15.0;
-    countLabel = [[UILabel alloc] initWithFrame:CGRectMake(34, yOfCountLabel, cardWidth, 30)];
-    [self.view addSubview:countLabel];
+    
+    CGFloat yOfCountView = (([[self view] bounds].size.height) / 2) + (cardHeight / 2) + 15.0;
+    CGRect viewFrame = CGRectMake(34, yOfCountView, cardWidth, 70);
+    
+    UIView *countView = [[UIView alloc] initWithFrame:viewFrame];
+    [countView setBackgroundColor:[UIColor whiteColor]];
+    [self.view addSubview:countView];
+    
+    CGFloat leftMargin = 50.0;
+    countLabel = [[UILabel alloc] initWithFrame:CGRectMake(leftMargin, 5, cardWidth - leftMargin, 60)];
     
     countLabel.textColor = [UIColor blackColor];
     
-    countLabel.textAlignment = NSTextAlignmentCenter;
-    countLabel.backgroundColor = [UIColor whiteColor];
+    [countLabel setTextAlignment:NSTextAlignmentLeft]; 
+    countLabel.backgroundColor = [UIColor clearColor];
     countLabel.font = [UIFont systemFontOfSize:14.0];
     countLabel.numberOfLines = 0;
-    [self refreshCountLabel];
-    
+    [countView addSubview:countLabel];
+    [self refreshCountLabel];    
 }
 
 - (CAAnimation *)flipAnimationWithDuration:(NSTimeInterval)aDuration
@@ -206,7 +213,7 @@
     [CATransaction commit];
 }
 
-// Does the animation of making the card disappear
+// Does the animation of making the card disappear by going up 
 - (void)removeCard
 {
     if (isTransitioning) {
@@ -244,26 +251,27 @@
 - (void)animationDidStop:(CAAnimation *)animation finished:(BOOL)flag
 {
     NSLog(@"Message 3: WCFViewController: I am in animationDidStop");
-    NSLog(@"Message 73: WCFViewController: Current country is: %@", [currentCountry countryName]);
     
     if ([[animation valueForKey:@"animationType"] isEqual:@"swipeUpAnim"]) {
-        NSLog(@"Message 24: WCFViewController: isEqual swipeUpAnim executing");
-        NSLog(@"Message 33: WCFViewController: Current country is: %@", [currentCountry countryName]);
         // Actually remove the card from the pack
         [[WCFCountryStore sharedStore] removeCard:currentCountry];
         // Update label
         [self refreshCountLabel];        
     }
     
+    if ([[animation valueForKey:@"animationType"] isEqual:@"swipeLeftAnim"]) {        
+        [[WCFCountryStore sharedStore] addCardToStash:currentCountry];
+        // Update label
+        [self refreshCountLabel];
+    }    
+    
     if ([[animation valueForKey:@"animationType"] isEqual:@"swipeUpAnim"] ||
         [[animation valueForKey:@"animationType"] isEqual:@"swipeLeftAnim"]) {
-        NSLog(@"Message 34: WCFViewController: Swipe has ended.");
         [self showNextCard];
     }
 
     if ([[animation valueForKey:@"animationType"] isEqual:@"flipAnim"]) {
         NSLog(@"Message 4: WCFViewController: We are in flipStop");
-        
         // reverse layer statuses
         if ([firstLayerStatus isEqual:@"UP"]) {
             [self setFirstLayerStatus:@"DOWN"];
@@ -272,8 +280,7 @@
             [self setFirstLayerStatus:@"UP"];
             [self setSecondLayerStatus:@"DOWN"];
         }
-    }
-    
+    }    
 	isTransitioning = NO;
 }
 
@@ -282,12 +289,13 @@
     NSString *myFormat;
     if ([[WCFCountryStore sharedStore] numCardsRemaining] == 1) {
         NSLog(@"Message 23: WCFViewController: One more card");
-        myFormat = @"%d card remaining / %d cards total";
+        myFormat = @"%d card in deck\n%d cards stashed\n%d cards total";
     } else {
-        myFormat = @"%d cards remaining / %d cards total";
+        myFormat = @"%d cards in deck\n%d cards stashed\n%d cards total";
     }
     
     countLabel.text = [NSString stringWithFormat:myFormat, [[WCFCountryStore sharedStore] numCardsRemaining],
+                       [[WCFCountryStore sharedStore] numCardsStashed],
                        [[WCFCountryStore sharedStore] numCardsTotal]];    
 }
 

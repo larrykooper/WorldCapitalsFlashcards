@@ -26,6 +26,7 @@
     self = [super init];
     if (self) {
         [self loadAllCountries];
+        stashCount = 0;
     }
     return self;
 }
@@ -148,6 +149,15 @@
     [remainingCards removeObjectIdenticalTo:country];
 }
 
+- (void)addCardToStash:(Country *)country
+{
+    [stash addObject:country];
+    // add one to the shashCount
+    stashCount++;    
+    // We remove the card because it is now not eligible for random selection
+    [self removeCard:country];
+}
+
 - (Country *)getRandomCardFromRemaining
 {
     NSUInteger randomIndex = arc4random() % [remainingCards count];
@@ -157,6 +167,11 @@
 - (NSInteger)numCardsRemaining
 {
     return [remainingCards count];
+}
+
+- (NSInteger)numCardsStashed
+{
+    return stashCount;
 }
 
 - (NSInteger)numCardsTotal;
