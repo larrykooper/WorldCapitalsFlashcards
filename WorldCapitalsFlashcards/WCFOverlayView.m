@@ -59,7 +59,7 @@
     UILabel *instrsLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 16, 230, 100)];
     [self addSubview:instrsLabel];
     
-    instrsLabel.text = @"Tap card to flip card over.\nIf you are right, swipe UP: remove card\nIf you are wrong, swipe LEFT: try card again later";
+    instrsLabel.text = @"Tap card to flip card over.\nIf you are right, swipe UP: remove card.\nIf you are wrong, swipe LEFT: try card again later.";
     instrsLabel.textColor = [UIColor whiteColor];
     
     instrsLabel.textAlignment = NSTextAlignmentLeft;
