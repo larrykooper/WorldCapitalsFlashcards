@@ -29,7 +29,12 @@
     [[self myView] setMyController:self];   
     [[self myView] initLayersToStartApp];
     [self createInstrsOverlay];
-    [self beginNewGame];
+    [self beginNewGame];    
+    
+    [self setFirstLayerStatus:@"UP"];
+    [self setSecondLayerStatus:@"DOWN"];
+    [self setFirstLabelShowing:@"COUNTRY"];
+    [self setSecondLabelShowing:@"CAPITAL"];
 }
 
 - (void)createInstrsOverlay
@@ -47,6 +52,7 @@
     [[WCFCountryStore sharedStore] setUpStash];
     [[WCFCountryStore sharedStore] setRemovedCardsCount:0];
     
+    // Remove "restart game" label 
     UIView *v = [[self view] viewWithTag:[@"10" integerValue]];
     if (v) {
         v.hidden = YES;
@@ -57,11 +63,21 @@
     
     [[self myView] initLayersToStartGame];
     NSLog(@"Message 71: WCFViewController: Current country is: %@", [currentCountry countryName]);
-   
-    [self setFirstLayerStatus:@"UP"];
-    [self setSecondLayerStatus:@"DOWN"];
-    [self setFirstLabelShowing:@"COUNTRY"];
-    [self setSecondLabelShowing:@"CAPITAL"];
+    WCFView *theView = [self myView];
+    if ([secondLayerStatus isEqual:@"UP"]) {
+        [[theView firstLabel] updateLabel:[currentCountry capital]];
+        [[theView secondLabel] updateLabel:[currentCountry countryName]];
+        
+        [self setFirstLabelShowing:@"CAPITAL"];
+        [self setSecondLabelShowing:@"COUNTRY"];
+        
+    } else {
+        [[theView firstLabel] updateLabel:[currentCountry countryName]];
+        [[theView secondLabel] updateLabel:[currentCountry capital]];
+        
+        [self setFirstLabelShowing:@"COUNTRY"];
+        [self setSecondLabelShowing:@"CAPITAL"];
+    }
 }
 
 - (void)viewDidLoad
@@ -455,7 +471,7 @@
 
 - (void)showNextCard
 {
-    if ([self gameIsOver]) {        
+    if ([[WCFCountryStore sharedStore] cardDeckEmpty] && [[WCFCountryStore sharedStore] numCardsStashed] == 0) {    
         [self showNoMoreCards];
         return;
     }
@@ -535,11 +551,6 @@
     [nmcLabel setNumberOfLines:0];
        
     [nmcView addSubview:nmcLabel];    
-}
-
-- (BOOL)gameIsOver
-{
-    return ([[WCFCountryStore sharedStore] cardDeckEmpty] && [[WCFCountryStore sharedStore] numCardsStashed] == 0);
 }
 
 @end

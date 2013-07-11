@@ -124,7 +124,11 @@
 {
     NSLog(@"Message 1: WCFView: I am in tap handler");
     
-    if (![myController gameIsOver]) {
+    if ([[WCFCountryStore sharedStore] cardDeckEmpty] && ([[WCFCountryStore sharedStore] numCardsStashed] == 0) &&
+        ([[WCFCountryStore sharedStore] numCardsRemoved] == [[WCFCountryStore sharedStore] numCardsTotal])) {
+        // restart game
+        [myController beginNewGame];
+    } else {
         CGPoint myPoint = [gr locationInView:self];
         CGFloat cardTopY = ((self.bounds.size.height / 2.0) - cardHeight / 2.0);
         CGFloat cardBottomY = cardTopY + cardHeight;
@@ -133,10 +137,7 @@
         
         if (myPoint.y > cardTopY && myPoint.y < cardBottomY && myPoint.x > cardLeftX && myPoint.x < cardRightX) {
             [myController flip];
-        }        
-    } else {
-        // restart game
-        [myController beginNewGame];
+        }    
     }    
 }
 
