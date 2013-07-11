@@ -377,7 +377,12 @@
     NSLog(@"Message 34: WCFViewController: tryCardAgainLater was called.");
     if (isTransitioning) {
         return;
-    }
+    }    
+    
+    // Can't go to left if no cards in deck 
+    if ([[WCFCountryStore sharedStore] numCardsRemaining] <= 1) {
+        return;
+    }    
     
     // Animate the card leaving to the left 
     CALayer *first = [[self myView] firstLayer];
