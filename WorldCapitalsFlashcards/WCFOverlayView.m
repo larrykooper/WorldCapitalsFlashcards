@@ -89,8 +89,7 @@
     CGFloat targetRightX = circleCenterX + circleRadius;    
     
     if (myPoint.y > targetTopY && myPoint.y < targetBottomY && myPoint.x > targetLeftX && myPoint.x < targetRightX) {
-        [self setHidden:YES];
-       // let me do this first and later animate its removal 
+        [self setHidden:YES];       
     }    
 }
 

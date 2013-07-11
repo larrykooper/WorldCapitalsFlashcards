@@ -72,7 +72,7 @@
     
     // Add tap recognizer
     UITapGestureRecognizer *tapRecognizer =
-    [[UITapGestureRecognizer alloc] initWithTarget:self
+    [[UITapGestureRecognizer alloc] initWithTarget:myController
                                             action:@selector(tap:)];
     [self addGestureRecognizer:tapRecognizer];
     
@@ -118,27 +118,6 @@
     [secondLayer setPosition:CGPointMake(self.bounds.size.width / 2, self.bounds.size.height / 2)];
     
     [secondLabel updateLabel:[c capital]];
-}
-
-- (void)tap:(UIGestureRecognizer *)gr
-{
-    NSLog(@"Message 1: WCFView: I am in tap handler");
-    
-    if ([[WCFCountryStore sharedStore] cardDeckEmpty] && ([[WCFCountryStore sharedStore] numCardsStashed] == 0) &&
-        ([[WCFCountryStore sharedStore] numCardsRemoved] == [[WCFCountryStore sharedStore] numCardsTotal])) {
-        // restart game
-        [myController beginNewGame];
-    } else {
-        CGPoint myPoint = [gr locationInView:self];
-        CGFloat cardTopY = ((self.bounds.size.height / 2.0) - cardHeight / 2.0);
-        CGFloat cardBottomY = cardTopY + cardHeight;
-        CGFloat cardLeftX = ((self.bounds.size.width / 2.0) - cardWidth / 2.0);
-        CGFloat cardRightX = (cardLeftX + cardWidth);
-        
-        if (myPoint.y > cardTopY && myPoint.y < cardBottomY && myPoint.x > cardLeftX && myPoint.x < cardRightX) {
-            [myController flip];
-        }    
-    }    
 }
 
 - (void)swipeUp:(UIGestureRecognizer *)gr

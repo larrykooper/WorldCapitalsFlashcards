@@ -43,6 +43,7 @@
     
     WCFOverlayView *ovlyView = [[WCFOverlayView alloc] initWithFrame:viewFrame];
     [ovlyView setBackgroundColor:[UIColor clearColor]];
+    [ovlyView setTag:12];
     [[self view] addSubview:ovlyView];
 }
 
@@ -552,5 +553,37 @@
        
     [nmcView addSubview:nmcLabel];    
 }
+
+- (void)tap:(UIGestureRecognizer *)gr
+{
+    NSLog(@"Message 1: WCFViewController: I am in tap handler");
+    WCFView *theView = [self myView];
+    
+    if ([[WCFCountryStore sharedStore] cardDeckEmpty] && ([[WCFCountryStore sharedStore] numCardsStashed] == 0) &&
+        ([[WCFCountryStore sharedStore] numCardsRemoved] == [[WCFCountryStore sharedStore] numCardsTotal])) {
+        // restart game
+        [self beginNewGame];
+    } else {
+        CGPoint myPoint = [gr locationInView:theView];
+        CGFloat cardTopY = ((theView.bounds.size.height / 2.0) - cardHeight / 2.0);
+        CGFloat cardBottomY = cardTopY + cardHeight;
+        CGFloat cardLeftX = ((theView.bounds.size.width / 2.0) - cardWidth / 2.0);
+        CGFloat cardRightX = (cardLeftX + cardWidth);
+        
+        if (myPoint.y > cardTopY && myPoint.y < cardBottomY && myPoint.x > cardLeftX && myPoint.x < cardRightX) {
+            [self flip];
+        }
+        
+        if (myPoint.y < cardTopY) {
+            UIView *instrs = [[self view] viewWithTag:[@"12" integerValue]];
+            if (instrs) {
+                if ([instrs isHidden]) {
+                    [instrs setHidden:NO];
+                }
+            }
+        }
+    }
+}
+
 
 @end
