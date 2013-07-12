@@ -156,8 +156,7 @@
 
 - (void)removeCard:(Country *)country
 {
-    NSLog(@"Message 19: WCFCountryStore: We are in remove card with country %@", [country countryName]);
-    [remainingCards removeObjectIdenticalTo:country];
+    NSLog(@"Message 19: WCFCountryStore: We are in remove card with country %@", [country countryName]);    
     removedCardsCount++;
 }
 
@@ -183,7 +182,9 @@
 - (Country *)getRandomCardFromRemaining
 {
     NSUInteger randomIndex = arc4random() % [remainingCards count];
-    return [remainingCards objectAtIndex:randomIndex];
+    Country *c = [remainingCards objectAtIndex:randomIndex];
+    [self takeCardOutOfPack:c];
+    return c;    
 }
 
 - (NSInteger)numCardsRemaining

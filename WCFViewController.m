@@ -490,6 +490,7 @@
     // Get a random card from the card that
     //  remain in the pack.
     Country *c = [[WCFCountryStore sharedStore] getRandomCardFromRemaining];
+    [self refreshCountLabel];
     [self setCurrentCountry:c];
    
     if ([secondLayerStatus isEqual:@"UP"]) {
