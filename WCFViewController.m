@@ -55,7 +55,7 @@
     countLabel = [[UILabel alloc] initWithFrame:CGRectMake(60, 320, 300, 30)];
     [self.view addSubview:countLabel];
     
-    countLabel.text = [NSString stringWithFormat:@"%d cards remaining / %d cards total", [[WCFCountryStore sharedStore] numCardsRemaining],
+    countLabel.text = [NSString stringWithFormat:@"%ld cards remaining / %ld cards total", [[WCFCountryStore sharedStore] numCardsRemaining],
                        [[WCFCountryStore sharedStore] numCardsTotal]];
     
     countLabel.textColor = [UIColor blackColor];

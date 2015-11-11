@@ -160,8 +160,13 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = WCF;
-				LastUpgradeCheck = 0460;
+				LastUpgradeCheck = 0710;
 				ORGANIZATIONNAME = "Kooper, Laurence";
+				TargetAttributes = {
+					71ACCFA3177CD53400630C77 = {
+						DevelopmentTeam = 869986DQDV;
+					};
+				};
 			};
 			buildConfigurationList = 71ACCF9F177CD53400630C77 /* Build configuration list for PBXProject "WorldCapitalsFlashcards" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -239,6 +244,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer: Larry Kooper (66D8WFV2WD)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -287,12 +293,14 @@
 		71ACCFC2177CD53400630C77 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: Larry Kooper (66D8WFV2WD)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "WorldCapitalsFlashcards/WorldCapitalsFlashcards-Prefix.pch";
 				INFOPLIST_FILE = "WorldCapitalsFlashcards/WorldCapitalsFlashcards-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.larrykooper.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "C4F62C38-4701-4052-946C-5AC1E108D8A1";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -300,12 +308,14 @@
 		71ACCFC3177CD53400630C77 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: Larry Kooper (66D8WFV2WD)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "WorldCapitalsFlashcards/WorldCapitalsFlashcards-Prefix.pch";
 				INFOPLIST_FILE = "WorldCapitalsFlashcards/WorldCapitalsFlashcards-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.larrykooper.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "C4F62C38-4701-4052-946C-5AC1E108D8A1";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
