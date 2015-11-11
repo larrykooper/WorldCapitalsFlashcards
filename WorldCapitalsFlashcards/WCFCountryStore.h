@@ -14,7 +14,14 @@
 {
     NSMutableArray *allCountries;
     NSMutableArray *remainingCards;
+    // The stash is the ordered list of cards that the user has pushed to the left
+    // It acts like a stack
+    NSMutableArray *stash;
+    // The stashCount is the current count of cards in the stash
+    NSInteger stashCount;
 }
+
+@property NSInteger removedCardsCount;
 
 + (WCFCountryStore *)sharedStore;
 
@@ -24,12 +31,26 @@
 
 - (void)removeCard:(Country *)country;
 
+- (void)addCardToStash:(Country *)country;
+
+- (void)addCardToDeck:(Country *)country;
+
 - (Country *)getRandomCardFromRemaining;
 
 - (NSInteger)numCardsRemaining;
 
+- (NSInteger)numCardsStashed;
+
+- (NSInteger)numCardsRemoved;
+
 - (NSInteger)numCardsTotal;
 
 - (BOOL)cardDeckEmpty;
+
+- (void)setUpRemainingCards;
+
+- (void)setUpStash;
+
+- (Country *)popStash;
 
 @end

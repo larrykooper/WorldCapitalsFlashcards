@@ -15,6 +15,7 @@
 #import "WCFConstants.h"
 #import "WCFCountryStore.h"
 #import "Country.h"
+#import "WCFOverlayView.h"
 
 @implementation WCFViewController
 @synthesize currentCountry, countLabel;
@@ -23,47 +24,89 @@
 
 - (void)loadView
 {
-    NSLog(@"Message 5: WCFViewController.m: loadView was called.");
-    [self setView:[[WCFView alloc] initWithFrame:[[UIScreen mainScreen] bounds]]];
-    [[self myView] setMyController:self];
-    [[self myView] initLayers];
+    NSLog(@"Message 5: WCFViewController: loadView was called.");
+    [self setView:[[WCFView alloc] initWithFrame:[[UIScreen mainScreen] bounds]]];  
+    [[self myView] setMyController:self];   
+    [[self myView] initLayersToStartApp];
+    [self createInstrsOverlay];
+    [self beginNewGame];    
+    
     [self setFirstLayerStatus:@"UP"];
     [self setSecondLayerStatus:@"DOWN"];
     [self setFirstLabelShowing:@"COUNTRY"];
     [self setSecondLabelShowing:@"CAPITAL"];
 }
 
+- (void)createInstrsOverlay
+{
+    CGRect viewFrame = CGRectMake(0, 14.5, 290, 176);
+    
+    WCFOverlayView *ovlyView = [[WCFOverlayView alloc] initWithFrame:viewFrame];
+    [ovlyView setBackgroundColor:[UIColor clearColor]];
+    [ovlyView setTag:12];
+    [[self view] addSubview:ovlyView];
+}
+
+- (void)beginNewGame
+{
+    [[WCFCountryStore sharedStore] setUpRemainingCards];
+    [[WCFCountryStore sharedStore] setUpStash];
+    [[WCFCountryStore sharedStore] setRemovedCardsCount:0];
+    
+    // Remove "restart game" label 
+    UIView *v = [[self view] viewWithTag:[@"10" integerValue]];
+    if (v) {
+        v.hidden = YES;
+        [[self view] bringSubviewToFront:v];
+        [v removeFromSuperview];
+    }
+    [self refreshCountLabel];
+    
+    [[self myView] initLayersToStartGame];
+    NSLog(@"Message 71: WCFViewController: Current country is: %@", [currentCountry countryName]);
+    WCFView *theView = [self myView];
+    if ([secondLayerStatus isEqual:@"UP"]) {
+        [[theView firstLabel] updateLabel:[currentCountry capital]];
+        [[theView secondLabel] updateLabel:[currentCountry countryName]];
+        
+        [self setFirstLabelShowing:@"CAPITAL"];
+        [self setSecondLabelShowing:@"COUNTRY"];
+        
+    } else {
+        [[theView firstLabel] updateLabel:[currentCountry countryName]];
+        [[theView secondLabel] updateLabel:[currentCountry capital]];
+        
+        [self setFirstLabelShowing:@"COUNTRY"];
+        [self setSecondLabelShowing:@"CAPITAL"];
+    }
+}
+
 - (void)viewDidLoad
 {
-    NSLog(@"Message 6: WCFViewController.m: viewDidLoad was called.");
-    
-    // Add instructions label
-    
-    UILabel *instrsLabel = [[UILabel alloc] initWithFrame:CGRectMake(60, 340, 300, 30)];
-    [self.view addSubview:instrsLabel];
-    
-    instrsLabel.text = @"Swipe up: remove card\nSwipe left: try card again later";
-    instrsLabel.textColor = [UIColor blackColor];
-    
-    instrsLabel.textAlignment = NSTextAlignmentLeft;
-    instrsLabel.backgroundColor = [UIColor clearColor];
-    instrsLabel.font = [UIFont systemFontOfSize:12.0];
-    instrsLabel.numberOfLines = 0;
+    NSLog(@"Message 6: WCFViewController: viewDidLoad was called.");
+    NSLog(@"Message 72: WCFViewController: Current country is: %@", [currentCountry countryName]);    
     
     // Add 'number of cards' label
     
-    countLabel = [[UILabel alloc] initWithFrame:CGRectMake(60, 320, 300, 30)];
-    [self.view addSubview:countLabel];
+    CGFloat yOfCountView = (([[self view] bounds].size.height) / 2) + (cardHeight / 2) + 15.0;
+    CGRect viewFrame = CGRectMake(35, yOfCountView, cardWidth, 85);
     
-    countLabel.text = [NSString stringWithFormat:@"%ld cards remaining / %ld cards total", [[WCFCountryStore sharedStore] numCardsRemaining],
-                       [[WCFCountryStore sharedStore] numCardsTotal]];
-    
+    UIView *countView = [[UIView alloc] initWithFrame:viewFrame];
+    [countView setBackgroundColor:[UIColor whiteColor]];
+    [self.view addSubview:countView];
+
+    CGFloat leftMargin = 50.0;
+    countLabel = [[UILabel alloc] initWithFrame:CGRectMake(leftMargin, 5, cardWidth - leftMargin, 72)];
+    countLabel.text = [NSString stringWithFormat:@"%ld cards remaining / %ld cards total", (long)[[WCFCountryStore sharedStore] numCardsRemaining],
+                       (long)[[WCFCountryStore sharedStore] numCardsTotal]];
     countLabel.textColor = [UIColor blackColor];
     
-    countLabel.textAlignment = NSTextAlignmentLeft;
+    [countLabel setTextAlignment:NSTextAlignmentLeft]; 
     countLabel.backgroundColor = [UIColor clearColor];
-    countLabel.font = [UIFont systemFontOfSize:12.0];
+    countLabel.font = [UIFont systemFontOfSize:14.0];
     countLabel.numberOfLines = 0;
+    [countView addSubview:countLabel];
+    [self refreshCountLabel];    
 }
 
 - (CAAnimation *)flipAnimationWithDuration:(NSTimeInterval)aDuration
@@ -166,12 +209,10 @@
                                                 startValue:startValueFront
                                                   endValue:endValueFront];
     
-    
     CAAnimation *backAnimation = [self
                                     flipAnimationWithDuration:0.75f
                                                    startValue:startValueBack
-                                                     endValue:endValueBack];
-    
+                                                     endValue:endValueBack];    
     CGFloat zDistance = 1500.0f;
     
     // Create CATransform3D data structure
@@ -190,7 +231,7 @@
     [CATransaction commit];
 }
 
-// Does the animation of making the card disappear
+// Does the animation of making the card disappear by going up 
 - (void)removeCard
 {
     if (isTransitioning) {
@@ -230,33 +271,32 @@
     NSLog(@"Message 3: WCFViewController: I am in animationDidStop");
     
     if ([[animation valueForKey:@"animationType"] isEqual:@"swipeUpAnim"]) {
-        NSLog(@"Message 24: WCFViewController: isEqual swipeUpAnim executing");
-        NSLog(@"Message 33: WCFViewController: Current country is: %@", [currentCountry countryName]);
         // Actually remove the card from the pack
         [[WCFCountryStore sharedStore] removeCard:currentCountry];
         // Update label
-        
-        NSString *myFormat;
-        if ([[WCFCountryStore sharedStore] numCardsRemaining] == 1) {
-            NSLog(@"Message 23: WCFViewController: One more card");
-            myFormat = @"%d card remaining / %d cards total";
-        } else {
-            myFormat = @"%d cards remaining / %d cards total";
-        }
-        
-        countLabel.text = [NSString stringWithFormat:myFormat, [[WCFCountryStore sharedStore] numCardsRemaining],
-                           [[WCFCountryStore sharedStore] numCardsTotal]];
+        [self refreshCountLabel];        
     }
+    
+    if ([[animation valueForKey:@"animationType"] isEqual:@"swipeLeftAnim"]) {        
+        [[WCFCountryStore sharedStore] addCardToStash:currentCountry];
+        // Update label
+        [self refreshCountLabel];
+    }    
     
     if ([[animation valueForKey:@"animationType"] isEqual:@"swipeUpAnim"] ||
         [[animation valueForKey:@"animationType"] isEqual:@"swipeLeftAnim"]) {
-        NSLog(@"Message 34: WCFViewController: Swipe has ended.");
         [self showNextCard];
     }
+    
+    if ([[animation valueForKey:@"animationType"] isEqual:@"swipeRightAnim"]) {        
+        // Add it to deck
+        [[WCFCountryStore sharedStore] addCardToDeck:currentCountry];
+        [self getCardFromStash];
+        [self refreshCountLabel];
+    }    
 
     if ([[animation valueForKey:@"animationType"] isEqual:@"flipAnim"]) {
         NSLog(@"Message 4: WCFViewController: We are in flipStop");
-        
         // reverse layer statuses
         if ([firstLayerStatus isEqual:@"UP"]) {
             [self setFirstLayerStatus:@"DOWN"];
@@ -265,11 +305,78 @@
             [self setFirstLayerStatus:@"UP"];
             [self setSecondLayerStatus:@"DOWN"];
         }
-    }
-    
+    }    
 	isTransitioning = NO;
 }
-             
+
+- (void)getCardFromStash
+{
+    NSLog(@"Message 33: WCFViewController: I am executing getCardFromStash");
+    WCFView *theView = [self myView];
+    
+    // Get the card
+    Country *c = [[WCFCountryStore sharedStore] popStash];
+    [self setCurrentCountry:c];
+     NSLog(@"Message 14: WCFViewController: Current country is: %@", [currentCountry countryName]); 
+    
+    if ([secondLayerStatus isEqual:@"UP"]) {
+        [[theView firstLabel] updateLabel:[c capital]];
+        [[theView secondLabel] updateLabel:[c countryName]];
+        
+        [self setFirstLabelShowing:@"CAPITAL"];
+        [self setSecondLabelShowing:@"COUNTRY"];
+        
+    } else {
+        [[theView firstLabel] updateLabel:[c countryName]];
+        [[theView secondLabel] updateLabel:[c capital]];
+        
+        [self setFirstLabelShowing:@"COUNTRY"];
+        [self setSecondLabelShowing:@"CAPITAL"];
+    }
+    // Animate moving the card in from the left (from left to right)
+    CALayer *first = [theView firstLayer];
+    CALayer *second = [theView secondLayer];
+    CGPoint endPoint = CGPointMake(theView.bounds.size.width / 2, theView.bounds.size.height / 2);
+ 
+    NSLog(@"Message 15: WCFViewController: endPoint: x: %f y: %f", endPoint.x, endPoint.y);
+    
+    CGFloat startPointX =  0.0 - (cardWidth / 2);
+    
+    CGPoint startPoint = CGPointMake(startPointX, endPoint.y);
+    
+    CAAnimation *firstAnimation = [self swipeAnimationWithDuration:0.3f
+                                                          startPoint:startPoint
+                                                            endPoint:endPoint];
+    
+    CAAnimation *secondAnimation = [self swipeAnimationWithDuration:0.3f
+                                                          startPoint:startPoint
+                                                            endPoint:endPoint];
+    [firstAnimation setDelegate:self];
+    [first setPosition:endPoint];
+    [second setPosition:endPoint];
+    [CATransaction begin];
+    [first addAnimation:firstAnimation forKey:@"stashcard1"];
+    [second addAnimation:secondAnimation forKey:@"stashcard2"];
+    [CATransaction commit];
+}
+
+- (void)refreshCountLabel
+{    
+    NSString *myFormat;
+    NSInteger remaining = [[WCFCountryStore sharedStore] numCardsRemaining];
+    NSInteger stashed = [[WCFCountryStore sharedStore] numCardsStashed];
+    NSInteger removed = [[WCFCountryStore sharedStore] numCardsRemoved];
+    NSInteger total =  [[WCFCountryStore sharedStore] numCardsTotal];
+    myFormat = @"%d %@ in deck\n%d %@ stashed\n%d %@ removed\n%d cards total";
+    [countLabel setText:[NSString stringWithFormat:myFormat, remaining, [self noun:remaining], stashed, [self noun:stashed], removed, [self noun:removed], total]];                       
+}
+
+- (NSString *)noun:(NSInteger)count
+{
+    return (count == 1) ? @"card" : @"cards";
+}
+
+
 - (WCFView *)myView
 {
     return (WCFView *)[self view];
@@ -285,10 +392,15 @@
 
 - (void)tryCardAgainLater
 {
-    NSLog(@"tryCardAgainLater was called.");
+    NSLog(@"Message 34: WCFViewController: tryCardAgainLater was called.");
     if (isTransitioning) {
         return;
-    }
+    }    
+    
+    // Can't go to left if no cards in deck 
+    if ([[WCFCountryStore sharedStore] numCardsRemaining] <= 1) {
+        return;
+    }    
     
     // Animate the card leaving to the left 
     CALayer *first = [[self myView] firstLayer];
@@ -318,13 +430,60 @@
     [CATransaction commit];        
 }
 
+- (void)getRidOfCardToRight
+{
+    if (isTransitioning) {
+        return;
+    }
+    
+    // Can't go to right if nothing is stashed 
+    if ([[WCFCountryStore sharedStore] numCardsStashed] == 0) {
+        return;
+    }
+    
+    // Animate the card leaving to the right
+    CALayer *first = [[self myView] firstLayer];
+    CALayer *second = [[self myView] secondLayer];
+    WCFView *theView = [self myView];    
+    
+    CGFloat endPointX = theView.bounds.size.width + (cardWidth * 0.75);
+    
+    CGPoint startPoint = CGPointMake([first position].x, [first position].y);
+    CGPoint endPoint = CGPointMake(endPointX, [first position].y);
+    
+    CAAnimation *firstAnimation = [self swipeAnimationWithDuration:0.3f
+                                                        startPoint:startPoint
+                                                          endPoint:endPoint];
+    
+    CAAnimation *secondAnimation = [self swipeAnimationWithDuration:0.3f
+                                                         startPoint:startPoint
+                                                           endPoint:endPoint];
+    
+    [firstAnimation setDelegate:self];
+    [first setPosition:endPoint];
+    [second setPosition:endPoint];
+    [firstAnimation setValue:@"swipeRightAnim" forKeyPath:@"animationType"];
+    
+    [CATransaction begin];
+    [first addAnimation:firstAnimation forKey:@"swipe1"];
+    [second addAnimation:secondAnimation forKey:@"swipe2"];
+    [CATransaction commit];
+    
+}
+
 - (void)showNextCard
 {
-    if ([[WCFCountryStore sharedStore] cardDeckEmpty]) {
-        NSLog(@"Message 22: WCFViewController: Card Deck is empty");
+    if ([[WCFCountryStore sharedStore] cardDeckEmpty] && [[WCFCountryStore sharedStore] numCardsStashed] == 0) {    
         [self showNoMoreCards];
         return;
     }
+    
+    if ([[WCFCountryStore sharedStore] cardDeckEmpty] && [[WCFCountryStore sharedStore] numCardsStashed] > 0) {
+        [self getCardFromStash];
+        [self refreshCountLabel];
+        return;
+    }    
+    
     NSLog(@"Message 42: WCFViewController: showNextCard executing.");    
     
     WCFView *theView = [self myView];
@@ -332,6 +491,7 @@
     // Get a random card from the card that
     //  remain in the pack.
     Country *c = [[WCFCountryStore sharedStore] getRandomCardFromRemaining];
+    [self refreshCountLabel];
     [self setCurrentCountry:c];
    
     if ([secondLayerStatus isEqual:@"UP"]) {
@@ -380,18 +540,52 @@
     NSLog(@"Message 23: WCFViewController: executing showNoMoreCards");
     CGRect nmcFrame = CGRectMake(30, 240, 300, 50);
     UIView *nmcView = [[UIView alloc] initWithFrame:nmcFrame];
+    [nmcView setTag:10];
     [self.view addSubview:nmcView];
     UILabel *nmcLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 20, 300, 50)];
    
-    [nmcLabel setText:@"No more cards!"];
+    [nmcLabel setText:@"No more cards!\nTap to restart game"];
     [nmcLabel setTextColor:[UIColor blackColor]];
     
     [nmcLabel setTextAlignment: NSTextAlignmentCenter];  
     
     [nmcLabel setBackgroundColor:[UIColor clearColor]];
     [nmcLabel setFont:[UIFont systemFontOfSize:16.0]];
+    [nmcLabel setNumberOfLines:0];
        
     [nmcView addSubview:nmcLabel];    
 }
+
+- (void)tap:(UIGestureRecognizer *)gr
+{
+    NSLog(@"Message 1: WCFViewController: I am in tap handler");
+    WCFView *theView = [self myView];
+    
+    if ([[WCFCountryStore sharedStore] cardDeckEmpty] && ([[WCFCountryStore sharedStore] numCardsStashed] == 0) &&
+        ([[WCFCountryStore sharedStore] numCardsRemoved] == [[WCFCountryStore sharedStore] numCardsTotal])) {
+        // restart game
+        [self beginNewGame];
+    } else {
+        CGPoint myPoint = [gr locationInView:theView];
+        CGFloat cardTopY = ((theView.bounds.size.height / 2.0) - cardHeight / 2.0);
+        CGFloat cardBottomY = cardTopY + cardHeight;
+        CGFloat cardLeftX = ((theView.bounds.size.width / 2.0) - cardWidth / 2.0);
+        CGFloat cardRightX = (cardLeftX + cardWidth);
+        
+        if (myPoint.y > cardTopY && myPoint.y < cardBottomY && myPoint.x > cardLeftX && myPoint.x < cardRightX) {
+            [self flip];
+        }
+        
+        if (myPoint.y < cardTopY) {
+            UIView *instrs = [[self view] viewWithTag:[@"12" integerValue]];
+            if (instrs) {
+                if ([instrs isHidden]) {
+                    [instrs setHidden:NO];
+                }
+            }
+        }
+    }
+}
+
 
 @end

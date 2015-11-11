@@ -15,7 +15,7 @@
 	BOOL isTransitioning;
     Country *currentCard;
 }
-@property (nonatomic, weak) Country *currentCountry;
+@property (nonatomic, strong) Country *currentCountry;
 @property (nonatomic, strong) UILabel *countLabel;
 @property (nonatomic, strong) NSString *firstLayerStatus;
 @property (nonatomic, strong) NSString *secondLayerStatus;
@@ -25,5 +25,7 @@
 - (void)flip;
 - (void)removeCard;
 - (void)tryCardAgainLater;
+- (void)getRidOfCardToRight;
+- (void)beginNewGame;
 
 @end

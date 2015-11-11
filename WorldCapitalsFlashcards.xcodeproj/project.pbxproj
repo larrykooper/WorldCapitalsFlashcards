@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		713911E1178C649F00C8E6CB /* WCFOverlayView.m in Sources */ = {isa = PBXBuildFile; fileRef = 713911E0178C649F00C8E6CB /* WCFOverlayView.m */; };
 		7189646B177DE3E7000DC778 /* WCFView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7189646A177DE3E7000DC778 /* WCFView.m */; };
 		718C72ED177E292D00B4E03E /* Country.m in Sources */ = {isa = PBXBuildFile; fileRef = 718C72EC177E292D00B4E03E /* Country.m */; };
 		718C72F3177E2E1B00B4E03E /* WCFCountryStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 718C72F2177E2E1B00B4E03E /* WCFCountryStore.m */; };
@@ -26,6 +27,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		713911DF178C649F00C8E6CB /* WCFOverlayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCFOverlayView.h; sourceTree = "<group>"; };
+		713911E0178C649F00C8E6CB /* WCFOverlayView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCFOverlayView.m; sourceTree = "<group>"; };
 		71896469177DE3E7000DC778 /* WCFView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WCFView.h; path = ../WCFView.h; sourceTree = "<group>"; };
 		7189646A177DE3E7000DC778 /* WCFView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WCFView.m; path = ../WCFView.m; sourceTree = "<group>"; };
 		718C72EB177E292D00B4E03E /* Country.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Country.h; sourceTree = "<group>"; };
@@ -110,6 +113,8 @@
 				74C92DA41783AC0800C78717 /* WCFConstants.m */,
 				718C72F1177E2E1B00B4E03E /* WCFCountryStore.h */,
 				718C72F2177E2E1B00B4E03E /* WCFCountryStore.m */,
+				713911DF178C649F00C8E6CB /* WCFOverlayView.h */,
+				713911E0178C649F00C8E6CB /* WCFOverlayView.m */,
 				71896469177DE3E7000DC778 /* WCFView.h */,
 				7189646A177DE3E7000DC778 /* WCFView.m */,
 				71ACCFCC177CD7E600630C77 /* WCFViewController.h */,
@@ -212,6 +217,7 @@
 				718C72F3177E2E1B00B4E03E /* WCFCountryStore.m in Sources */,
 				74C92DA21783A1F900C78717 /* WCFCardLabel.m in Sources */,
 				74C92DA51783AC0800C78717 /* WCFConstants.m in Sources */,
+				713911E1178C649F00C8E6CB /* WCFOverlayView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
